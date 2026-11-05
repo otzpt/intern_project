@@ -1,0 +1,32 @@
+/* Estilos da pagina /live */
+:root {
+    --cor-mode-gb-dark: black;
+    --cor-mode-text-dark: white;
+}
+
+body.dark {
+    background-color: var(--cor-mode-gb-dark);
+    color: var(--cor-mode-text-dark);
+}
+
+.button_left {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#nav {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    color: inherit;
+    padding: 16px;
+    border-bottom: 1px solid;
+}
+
+#nav nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}

@@ -1,23 +1,29 @@
 import threading
 import time
+from pathlib import Path
 
 import serial
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+PORTA = "/dev/ttyACM0"
+STATIC = Path(__file__).parent / "static"
 
 app = FastAPI()
-PORTA = "/dev/ttyACM0"
+app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 # Ultima leitura do Arduino. So a thread de leitura escreve aqui; os pedidos so leem.
 ultima = {"erro": "a espera da primeira leitura..."}
+
 
 def ler_em_fundo():
     global ultima
     while True:
         try:
-            # Abrir a porta reinicia o Arduino: arranque (~2 s) + intervalo de 5 s. timeout=8 trata disso isso.
+            # Abrir a porta reinicia o Arduino: arranque (~2 s) + intervalo de 5 s. timeout=8 trata disso.
             with serial.Serial(PORTA, 9600, timeout = 8) as ser:
-                ultima= {"erro": "arduino ligado, a espera da primeira leitura..."} # atualiza ultima
+                ultima= {"erro": "arduino ligado, a espera da primeira leitura..."}
                 while True:
                     line = ser.readline().decode(errors="replace").strip()
 
@@ -30,33 +36,13 @@ def ler_em_fundo():
                     except ValueError:
                         ultima = {"erro": f"leitura invalida: {line!r}"}
 
-        except serial.SerialException as e:
+        except serial.SerialException: #as e: -descomenta isso debug
             # Arduino desligado ou porta ocupada: tenta abrir de novo em 2 s.
-            ultima = {"erro": f"Arduino desligado? A tentar de novo... ({e})"}
+            ultima = {"erro": "Arduino desligado. A tentar de novo... "} # mete ({e}) no final e f no inicio antes do " se quiseres debug
             time.sleep(2)
 
-threading.Thread(target=ler_em_fundo, daemon=True).start()
 
-PAGINA = """
-<!doctype html>
-        <meta charset="utf-8">
-            <title>Sensor</title>
-            <p id="valores">A espera da primeira leitura...</p>
-    <script>
-        const el = document.getElementById("valores");
-        async function atualizar() {
-            try {
-                const r = await fetch("/");
-                const d = await r.json();
-                el.textContent = r.ok ? `Temperatura: ${d.temperatura} °C | Humidade: ${d.humidade} %`: d.detail;
-            } catch (e) {
-                el.textContent = "Sem ligacao ao servidor";
-            }
-        }
-        atualizar();
-        setInterval(atualizar, 1000);
-    </script>
-"""
+threading.Thread(target=ler_em_fundo, daemon=True).start()
 
 
 @app.get("/")
@@ -66,6 +52,6 @@ def root():
     return ultima
 
 
-@app.get("/live", response_class=HTMLResponse)
+@app.get("/live")
 def live():
-    return PAGINA
+    return FileResponse(STATIC / "live.html")
