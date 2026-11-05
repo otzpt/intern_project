@@ -11,15 +11,16 @@ PORTA = "/dev/ttyACM0"
 # Ultima leitura do Arduino. So a thread de leitura escreve aqui; os pedidos so leem.
 ultima = {"erro": "a espera da primeira leitura..."}
 
-
 def ler_em_fundo():
     global ultima
     while True:
         try:
+            # Abrir a porta reinicia o Arduino: arranque (~2 s) + intervalo de 5 s. timeout=8 trata disso isso.
             with serial.Serial(PORTA, 9600, timeout = 8) as ser:
-                ultima= {"erro": "arduino ligado, a espera da primeira leitura..."}
+                ultima= {"erro": "arduino ligado, a espera da primeira leitura..."} # atualiza ultima
                 while True:
                     line = ser.readline().decode(errors="replace").strip()
+
                     if not line:
                         ultima = {"erro": "sem dados do Arduino ha 8 s"}
                         continue
