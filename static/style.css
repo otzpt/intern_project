@@ -1,12 +1,27 @@
 /* Estilos da pagina /live */
+
+/* Modo claro (por defeito). Neutros sem tom (chroma 0), nunca #fff/#000 puros. */
 :root {
-    --cor-mode-gb-dark: black;
-    --cor-mode-text-dark: white;
+    --cor-fundo: oklch(0.97 0 0);
+    --cor-texto: oklch(0.2 0 0);
+    --cor-fundo-navbar: oklch(0.97 0 0 / 0.8);
+    --cor-hover-navbar: oklch(0.2 0 0 / 0.08);
+    --cor-borda-navbar: oklch(0.2 0 0 / 0.12);
 }
 
+/* Modo escuro: so troca os valores, as regras abaixo nao mudam. */
 body.dark {
-    background-color: var(--cor-mode-gb-dark);
-    color: var(--cor-mode-text-dark);
+    --cor-fundo: oklch(0.16 0 0);
+    --cor-texto: oklch(0.94 0 0);
+    --cor-fundo-navbar: oklch(0.16 0 0 / 0.8);
+    --cor-hover-navbar: oklch(1 0 0 / 0.1);
+    --cor-borda-navbar: oklch(1 0 0 / 0.12);
+}
+
+body {
+    margin: 0;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
 }
 
 .button_left {
@@ -17,16 +32,48 @@ body.dark {
 }
 
 #nav {
-    position: relative;
+    position: sticky;
     display: flex;
     justify-content: center;
     color: inherit;
     padding: 16px;
-    border-bottom: 1px solid;
+    border-bottom: 1px solid var(--cor-borda-navbar);
+    backdrop-filter: blur(20px);
+    top: 0;
+    z-index: 999;
+    background-color: var(--cor-fundo-navbar);
 }
 
 #nav nav {
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+#nav a,
+#nav button {
+    padding: 12px 16px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: transparent;
+    font: inherit;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+#nav button {
+    border-color: var(--cor-borda-navbar);
+}
+
+#nav a:hover,
+#nav button:hover {
+    background-color: var(--cor-hover-navbar);
+}
+
+#nav a:focus-visible,
+#nav button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
 }
