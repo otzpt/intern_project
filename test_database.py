@@ -16,7 +16,7 @@ class TestDataBase(unittest.TestCase):
 
     def inserir(self, hora, t, h):
         with closing(sqlite3.connect(db.DB)) as con:
-            con.execute("INSERT INTO reads (hora, temperatura, humidade) VALUE (?, ?, ?)", (hora, t, h))
+            con.execute("INSERT INTO reads (hora, temperatura, humidade) VALUES (?, ?, ?)", (hora, t, h))
             con.commit()
 
     def test_media_sem_leituras(self):
@@ -25,16 +25,16 @@ class TestDataBase(unittest.TestCase):
     def test_media_ignora_leituras_antigas(self):
         self.inserir("2000-01-01 00:00:00", 99.0, 99.0)
 
-        db.guardar(22.0, 50.0)
+        db.guardar(20.0, 50.0)
         db.guardar(22.0, 60.0)
 
-        self.assertEqual(d.media(15), (21.0, 55.0))
+        self.assertEqual(db.media(15), (21.0, 55.0))
 
     def test_ultimas_mais_antiga_primeiro(self):
         for i in range(5):
             db.guardar(float(i), 50.0)
 
-        self.assertEqual([t for _, t, _ in db.ultimas(3)], [2.0, 3.0, 7.0])
+        self.assertEqual([t for _, t, _ in db.ultimas(3)], [2.0, 3.0, 4.0])
 
     def test_medias_por_minuto_agrupa(self):
         self.inserir("2026-11-06 12:00:05", 20.0, 50.0)

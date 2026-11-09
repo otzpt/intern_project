@@ -26,6 +26,12 @@ uvicorn main:app
 
 Then open `http://127.0.0.1:8000/live`.
 
+## Tests
+
+```bash
+.venv/bin/python -m unittest -v
+```
+
 ## Limitations
 
 Only temperature and humidity for now, CO2 and gas are not done
