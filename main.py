@@ -1,16 +1,17 @@
+import os
 import sqlite3
 import threading
 import time
 from pathlib import Path
 
 import serial
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import database as db
 
-PORTA = "/dev/ttyACM0"
+PORTA = os.getenv("PORTA_SERIE", "/dev/ttyACM0")#/dev/ttyACM0" | hardcoded old port
 STATIC = Path(__file__).parent / "static"
 
 app = FastAPI()
@@ -74,3 +75,19 @@ def media():
     if temperatura is None:
         raise HTTPException(404, "sem leituras nos ultimos 15 min")
     return {"temperatura": temperatura, "humidade": humidade}
+
+
+@app.get("/historico")
+def historico(n: int = Query(60, ge=1, le=1000)):
+    return [
+        {"hora": hora, "temperatura": t, "humidade": h}
+        for hora, t, h in db.ultimas(n)
+    ]
+
+
+@app.get("/medias")
+def medias(n : int = Query(30, ge=1, le=1000)):
+    return [
+        {"minuto": minuto, "temperatura": t, "humidade": h}
+        for minuto, t, h in db.medias_por_minuto(n)
+    ]

@@ -33,9 +33,29 @@ Average of the readings saved in the last 15 minutes.
 
 Returns `404` with `{"detail": "sem leituras nos ultimos 15 min"}` when the window has no readings. The average covers only the readings that exist, so right after startup it is shorter than 15 minutes.
 
+### `GET /historico?n=60`
+
+The last `n` saved readings, oldest first. `n` is an integer from 1 to 1000 (default 60), anything else returns `422`.
+
+```json
+[{"hora": "2026-11-06 12:54:13", "temperatura": 22.9, "humidade": 39.4}]
+```
+
+`hora` is UTC, `YYYY-MM-DD HH:MM:SS`. Returns `[]` when the table is empty.
+
+### `GET /medias?n=30`
+
+Per-minute averages of the last `n` minutes that have readings, oldest first. `n` has the same limits as `/historico`.
+
+```json
+[{"minuto": "2026-11-06 12:54", "temperatura": 22.9, "humidade": 39.5}]
+```
+
+The newest entry is the minute in progress, so its average is incomplete.
+
 ### `GET /live`
 
-HTML page (`static/live.html`) that polls `/` and `/media` every second. Static files are served from `/static`.
+HTML page (`static/live.html`). It polls `/` and `/media` every second, `/historico?n=60` every 5 s and `/medias?n=15` every 60 s, and draws four SVG charts (temperature and humidity, current and per-minute average). Static files are served from `/static`.
 
 ## Database
 

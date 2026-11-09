@@ -32,3 +32,21 @@ def media(minutos=15):
             "WHERE hora >= datetime('now', ?)",
             (f"-{minutos} minutes",),
         ).fetchone()
+
+def ultimas(n=60):
+    with closing(sqlite3.connect(DB)) as con:
+        linhas = con.execute(
+            "SELECT hora, temperatura, humidade FROM reads ORDER BY id DESC LIMIT ?",
+        (n,),
+        ).fetchall()
+    return linhas[::-1]
+
+def medias_por_minuto(n=30):
+    with closing(sqlite3.connect(DB)) as con:
+        linhas = con.execute(
+            "SELECT strftime('%Y-%m-%d %H:%M', hora) AS minuto, "
+            "AVG(temperatura), AVG(humidade) "
+            "FROM reads GROUP BY minuto ORDER BY minuto DESC LIMIT ?",
+            (n,),
+        ).fetchall()
+    return linhas[::-1]

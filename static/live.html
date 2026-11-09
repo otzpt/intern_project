@@ -2,6 +2,7 @@
 <html lang="pt">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Sensor</title>
         <link rel="stylesheet" href="/static/style.css">
     </head>
@@ -13,8 +14,41 @@
                 <button id="darkmode" class="button_left">dark</button>
             </nav>
         </div>
-        <p id="valores">A espera da primeira leitura...</p>
-        <p id="media">A espera da media...</p>
+
+        <section id="atual">
+            <h2>Atual</h2>
+            <p id="valores">A espera da primeira leitura...</p>
+            <div class="graficos">
+                <figure>
+                    <figcaption>Temperatura (°C), ultimas 60 leituras</figcaption>
+                    <svg id="grafico_temperatura" class="grafico temperatura" viewBox="0 0 600 200"
+                         role="img" aria-label="Temperatura, ultimas 60 leituras"></svg>
+                </figure>
+                <figure>
+                    <figcaption>Humidade (%), ultimas 60 leituras</figcaption>
+                    <svg id="grafico_humidade" class="grafico humidade" viewBox="0 0 600 200"
+                         role="img" aria-label="Humidade, ultimas 60 leituras"></svg>
+                </figure>
+            </div>
+        </section>
+
+        <section id="media">
+            <h2>Media</h2>
+            <p id="media_texto">A espera da media...</p>
+            <div class="graficos">
+                <figure>
+                    <figcaption>Temperatura (°C), media por minuto, ultimos 15 min</figcaption>
+                    <svg id="grafico_media_temperatura" class="grafico temperatura" viewBox="0 0 600 200"
+                         role="img" aria-label="Media por minuto da temperatura, ultimos 15 minutos"></svg>
+                </figure>
+                <figure>
+                    <figcaption>Humidade (%), media por minuto, ultimos 15 min</figcaption>
+                    <svg id="grafico_media_humidade" class="grafico humidade" viewBox="0 0 600 200"
+                         role="img" aria-label="Media por minuto da humidade, ultimos 15 minutos"></svg>
+                </figure>
+            </div>
+        </section>
+
         <script src="/static/script.js"></script>
     </body>
 </html>

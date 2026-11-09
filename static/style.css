@@ -7,6 +7,9 @@
     --cor-fundo-navbar: oklch(0.97 0 0 / 0.8);
     --cor-hover-navbar: oklch(0.2 0 0 / 0.08);
     --cor-borda-navbar: oklch(0.2 0 0 / 0.12);
+    /* mesma luminosidade e chroma, so muda o tom (DESIGN_RULES) */
+    --cor-temperatura: oklch(0.55 0.17 45);
+    --cor-humidade: oklch(0.55 0.17 250);
 }
 
 /* Modo escuro: so troca os valores, as regras abaixo nao mudam. */
@@ -16,6 +19,8 @@ body.dark {
     --cor-fundo-navbar: oklch(0.16 0 0 / 0.8);
     --cor-hover-navbar: oklch(1 0 0 / 0.1);
     --cor-borda-navbar: oklch(1 0 0 / 0.12);
+    --cor-temperatura: oklch(0.75 0.15 45);
+    --cor-humidade: oklch(0.75 0.15 250);
 }
 
 body {
@@ -76,4 +81,68 @@ body {
 #nav button:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
+}
+
+section {
+    padding: 24px 16px;
+    max-width: 1000px;
+    /* a nav e sticky: sem isto o titulo da seccao fica por baixo dela ao saltar por um link */
+    scroll-margin-top: 72px;
+}
+
+h2 {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    line-height: 1.2;
+}
+
+.graficos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+figure {
+    margin: 0;
+}
+
+figcaption {
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+}
+
+.grafico {
+    width: 100%;
+    border: 1px solid var(--cor-borda-navbar);
+    border-radius: 8px;
+}
+
+.grelha {
+    stroke: var(--cor-borda-navbar);
+    stroke-width: 1;
+}
+
+.rotulo {
+    fill: var(--cor-texto);
+    font-size: 11px;
+}
+
+.linha {
+    fill: none;
+    stroke: var(--cor-serie);
+    stroke-width: 2;
+    stroke-linejoin: round;
+}
+
+.ponto {
+    fill: var(--cor-serie);
+}
+
+/* cada serie tem a sua cor, igual no grafico atual e no da media */
+.temperatura {
+    --cor-serie: var(--cor-temperatura);
+}
+
+.humidade {
+    --cor-serie: var(--cor-humidade);
 }

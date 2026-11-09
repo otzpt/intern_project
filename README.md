@@ -7,14 +7,14 @@ Goal is temperature, humidity, CO2 and gas. Right now only temperature and humid
 ## Features
 
 - **Temperature and humidity**: DHT22 on pin 2, read every 5 s by `arduino/main/main.ino`
-- **Live page**: `/live` shows the current reading and the 15 min average, with a dark mode switch
+- **Live page**: `/live` shows the current reading, the 15 min average and four charts (temperature and humidity, last 60 readings and per-minute averages), with a dark mode switch
 - **History**: every valid reading is saved in SQLite (`reads.db`, created on startup), so the average survives a server restart
 - **Reconnects by itself**: unplug the Arduino and the page shows an error, plug it back and it recovers with no restart
-- **Routes**: `/` last reading as JSON (503 on error), `/media` average of the last 15 min (404 if there are no readings), `/live` the page
+- **Routes**: `/` last reading as JSON (503 on error), `/media` average of the last 15 min (404 if there are no readings), `/historico` the last N readings, `/medias` per-minute averages, `/live` the page
 
 ## How to run
 
-You need an Arduino with the sketch from `arduino/main/main.ino` and a DHT22 on pin 2, plugged in by USB. The serial port is hardcoded as `PORTA` in `main.py` (`/dev/ttyACM0`).
+You need an Arduino with the sketch from `arduino/main/main.ino` and a DHT22 on pin 2, plugged in by USB. The serial port is read from the `PORTA_SERIE` environment variable (default `/dev/ttyACM0`), e.g. `PORTA_SERIE=/dev/ttyUSB0 uvicorn main:app`.
 
 ```bash
 git clone "https://github.com/otzpt/intern_project" && cd intern_project
@@ -28,8 +28,6 @@ Then open `http://127.0.0.1:8000/live`.
 
 ## Limitations
 
-Serial port is hardcoded
-
 Only temperature and humidity for now, CO2 and gas are not done
 
 A DHT read error is shown as "leitura invalida", it is not told apart from a bad line
@@ -40,6 +38,7 @@ No authentication, anyone on the network can read the data if you bind it to `0.
 
 - [API and database](docs/api.md)
 - [Hardware and serial protocol](docs/hardware.md)
+- [Roadmap](docs/roadmap.md)
 - [Code of conduct](CODE_OF_CONDUCT.md)
 
 ## License
