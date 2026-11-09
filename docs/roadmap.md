@@ -1,50 +1,45 @@
 # Roadmap
 
-Proposals, not commitments. Each item says what in the code would change.
+Propostas, não compromissos. Cada item diz o que mudaria no código.
 
-## Done
+## Feito
 
-- DHT22 on an Arduino, one line per reading over serial
-- Server reads the port, reconnects when the cable is unplugged, saves valid readings in SQLite
-- Routes `/`, `/media`, `/historico`, `/medias`, `/live`
-- Live page with temperature and humidity charts (last 60 readings and per-minute averages), dark mode
+- DHT22 num Arduino, uma linha por leitura pela porta série
+- O servidor lê a porta, volta a ligar quando o cabo é desligado e guarda as leituras válidas em SQLite
+- Rotas `/`, `/media`, `/estatisticas`, `/historico`, `/medias`, `/live`
+- Página ao vivo com gráficos, médias, estatísticas, seletor de dia e modo escuro
+- Leituras com mais de 7 dias apagadas, testes de `unittest`
 
-## Next sensors (CO2, gas)
+## Próximos sensores (CO2, gás)
 
-The line format is fixed to two numbers: `t, h = line.split(",")` in `server/main.py` fails with a `ValueError` on any extra field, and the table `reads` has only `temperatura` and `humidade`.
+O formato da linha está fixo em dois números: `parse_linha` em `server/leitura.py` falha com `ValueError` se houver mais um campo, e a tabela `reads` só tem `temperatura` e `humidade`.
 
-1. Choose a line format that can grow, for example `temperatura=21.9,humidade=39.7,co2=612`.
-2. Update the parser in `server/main.py` and the tables in `server/database.py`.
-3. Add the new fields to `/`, `/historico`, `/medias` and `docs/api.md`.
-4. Add one more chart per quantity in `server/static/live.html` and an entry in `GRAFICOS_ATUAL` and `GRAFICOS_MEDIA` in `server/static/script.js`.
+1. Escolher um formato de linha que possa crescer, por exemplo `temperatura=21.9,humidade=39.7,co2=612`.
+2. Atualizar o parser em `server/leitura.py` e a tabela em `server/database.py` (a `reads.db` existente precisa de migração).
+3. Acrescentar os novos campos a `/`, `/historico`, `/medias`, `/estatisticas` e a `docs/api.md`.
+4. Acrescentar um gráfico por grandeza em `server/static/live.html` e uma entrada em `GRAFICOS_ATUAL` e `GRAFICOS_MEDIA` em `server/static/script.js`.
 
-## Other computers (host)
+## Outros computadores (host)
 
-- The serial port is set with `PORTA_SERIE`. Typical names are `/dev/ttyACM0` or `/dev/ttyUSB0` on Linux, `COM3` and similar on Windows, `/dev/cu.usbmodem*` on macOS. Not tested outside Linux.
-- Reading the port may need permissions for your user on Linux.
-- `requirements.txt` pins the versions installed in the original `.venv` (Python 3.14). The minimum Python version that works is unknown, test it before relying on an older one.
+- A porta série define-se com `PORTA_SERIE`. Nomes típicos: `/dev/ttyACM0` ou `/dev/ttyUSB0` em Linux, `COM3` e semelhantes em Windows, `/dev/cu.usbmodem*` em macOS. Não foi testado fora de Linux.
+- Ler a porta pode exigir permissões para o teu utilizador em Linux.
+- O `requirements.txt` fixa as versões instaladas na `.venv` original (Python 3.14). A versão mínima de Python que funciona é desconhecida, testa antes de usar uma mais antiga.
 
-## Other boards (ESP32, Nano, others)
+## Outras placas (ESP32, Nano, outras)
 
-The protocol does not depend on the board: any board that prints `temperatura,humidade` once per line at 9600 baud works with the server as it is.
+O protocolo não depende da placa: qualquer placa que escreva `temperatura,humidade` numa linha a 9600 baud funciona com o servidor tal como está.
 
-- The baud rate `9600` is hardcoded in `server/main.py` (`serial.Serial(PORTA, 9600, ...)`) and in `arduino/main/main.ino`. A different rate needs both changed. Making it an environment variable like `PORTA_SERIE` would avoid editing the code.
-- The sketch uses the `DHT.h` library and pin 2. Other boards may use different pin numbers.
+- Os `9600` baud estão escritos no código em `server/main.py` (`serial.Serial(PORTA, 9600, ...)`) e em `arduino/main/main.ino`. Outro valor obriga a alterar os dois. Tornar isto uma variável de ambiente como `PORTA_SERIE` evitava editar o código.
+- O sketch usa a biblioteca `DHT.h` e o pino 2. Outras placas podem usar outros números de pino.
 
-## More than one device
+## Mais do que um dispositivo
 
-Today there is one port, one reader thread and one table with no device column. For several devices:
+Hoje há uma porta, uma thread de leitura e uma tabela sem coluna de dispositivo. Para vários dispositivos:
 
-1. Add a `dispositivo` column to `reads`.
-2. Start one reader thread per port, each with its own entry in the shared `ultima` state.
-3. Add a `?dispositivo=` filter to the routes and a selector to the page.
+1. Acrescentar uma coluna `dispositivo` a `reads`.
+2. Arrancar uma thread de leitura por porta, cada uma com a sua entrada no estado partilhado `ultima`.
+3. Acrescentar um filtro `?dispositivo=` às rotas e um seletor à página.
 
-## Wireless instead of USB
+## Sem fios em vez de USB
 
-A board with Wi-Fi could send each reading with an HTTP `POST` instead of the serial port. That needs a new route in `server/main.py` that validates the body, and a decision on authentication, since the server has none now.
-
-## Tests
-
-```bash
-python -m unittest -v
-```
+Uma placa com Wi-Fi podia enviar cada leitura com um `POST` HTTP em vez de usar a porta série. Isso pede uma rota nova em `server/main.py` que valide o corpo do pedido, e uma decisão sobre autenticação, já que o servidor não tem nenhuma.

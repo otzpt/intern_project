@@ -1,20 +1,20 @@
 # intern_project
 
-A simple car sensor monitor for my internship: an Arduino reads the sensors, a small FastAPI server stores the readings and shows them on a web page
+Um monitor simples de sensores de carro para o meu estágio: um Arduino lê os sensores, um pequeno servidor FastAPI guarda as leituras e mostra-as numa página web.
 
-Goal is temperature, humidity, CO2 and gas. Right now only temperature and humidity work.
+O objetivo é temperatura, humidade, CO2 e gás. Por agora só funcionam a temperatura e a humidade.
 
-## Features
+## Funcionalidades
 
-- **Temperature and humidity**: DHT22 on pin 2, read every 5 s by `arduino/main/main.ino`
-- **Live page**: `/live` shows the current reading against the 15 min average, live charts, averages and min/average/max statistics for several periods, and any one of the last 7 days on its own, with a dark mode switch that is remembered
-- **History**: every valid reading is saved in SQLite (`reads.db`, created on startup), so the average survives a server restart. Readings older than 7 days are deleted
-- **Reconnects by itself**: unplug the Arduino and the page shows an error, plug it back and it recovers with no restart
-- **Routes**: `/` last reading as JSON (503 on error), `/media` average of the last 15 min (404 if there are no readings), `/historico` the last N readings, `/medias` averages in blocks of N minutes, `/estatisticas` min/average/max (last N minutes or a fixed period), `/live` the page
+- **Temperatura e humidade**: DHT22 no pino 2, lido de 5 em 5 s por `arduino/main/main.ino`
+- **Página ao vivo**: `/live` mostra a leitura atual comparada com a média de 15 min, gráficos ao vivo, médias e estatísticas (mínimo, média e máximo) para vários períodos, e qualquer um dos últimos 7 dias em separado, com um botão de modo escuro que fica guardado
+- **Histórico**: cada leitura válida é guardada em SQLite (`reads.db`, criada no arranque), por isso a média sobrevive a um reinício do servidor. As leituras com mais de 7 dias são apagadas
+- **Volta a ligar sozinho**: se desligares o Arduino a página mostra um erro, e se o voltares a ligar recupera sem reiniciar
+- **Rotas**: `/` última leitura em JSON (503 em caso de erro), `/media` média dos últimos 15 min (404 se não houver leituras), `/historico` as últimas N leituras, `/medias` médias em blocos de N minutos, `/estatisticas` mínimo, média e máximo (últimos N minutos ou um período fixo), `/live` a página
 
-## How to run
+## Como correr
 
-You need an Arduino with the sketch from `arduino/main/main.ino` and a DHT22 on pin 2, plugged in by USB. The serial port is read from the `PORTA_SERIE` environment variable (default `/dev/ttyACM0`), e.g. `PORTA_SERIE=/dev/ttyUSB0 uvicorn server.main:app`.
+Precisas de um Arduino com o sketch de `arduino/main/main.ino` e um DHT22 no pino 2, ligado por USB. A porta série vem da variável de ambiente `PORTA_SERIE` (por defeito `/dev/ttyACM0`), por exemplo `PORTA_SERIE=/dev/ttyUSB0 uvicorn server.main:app`.
 
 ```bash
 git clone "https://github.com/otzpt/intern_project" && cd intern_project
@@ -24,27 +24,27 @@ pip install -r requirements.txt
 uvicorn server.main:app
 ```
 
-Then open `http://127.0.0.1:8000/live`.
+Depois abre `http://127.0.0.1:8000/live`.
 
-## Tests
+## Testes
 
 ```bash
 .venv/bin/python -m unittest -v
 ```
 
-## Limitations
+## Limitações
 
-Only temperature and humidity for now, CO2 and gas are not done
+Por agora só temperatura e humidade, o CO2 e o gás ainda não estão feitos.
 
-No authentication, anyone on the network can read the data if you bind it to `0.0.0.0`
+Não há autenticação: se o servidor ouvir em `0.0.0.0`, qualquer pessoa na rede pode ler os dados.
 
-## Docs
+## Documentação
 
-- [API and database](docs/api.md)
-- [Hardware and serial protocol](docs/hardware.md)
+- [API e base de dados](docs/api.md)
+- [Hardware e protocolo série](docs/hardware.md)
 - [Roadmap](docs/roadmap.md)
-- [Code of conduct](CODE_OF_CONDUCT.md)
+- [Código de conduta](CODE_OF_CONDUCT.md)
 
-## License
+## Licença
 
 [MIT](LICENSE)

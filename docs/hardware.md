@@ -1,29 +1,29 @@
-# Hardware and serial protocol
+# Hardware e protocolo série
 
-## Parts
+## Componentes
 
-- Arduino connected by USB (appears as `/dev/ttyACM0` on Linux, override with the `PORTA_SERIE` environment variable, read in `server/main.py`)
-- DHT22 temperature and humidity sensor, data pin on Arduino pin 2
+- Arduino ligado por USB (aparece como `/dev/ttyACM0` em Linux, pode ser alterado com a variável de ambiente `PORTA_SERIE`, lida em `server/main.py`)
+- Sensor de temperatura e humidade DHT22, pino de dados no pino 2 do Arduino
 
-Power, ground and any pull-up resistor wiring are not described by the code, so they are not documented here.
+A alimentação, a massa e a eventual resistência pull-up não estão descritas no código, por isso não estão documentadas aqui.
 
 ## Firmware
 
-`arduino/main/main.ino` uses the `DHT.h` library, `DHT22` on pin 2, serial at 9600 baud. Every 5 s it reads the sensor and prints one line:
+`arduino/main/main.ino` usa a biblioteca `DHT.h`, um `DHT22` no pino 2 e série a 9600 baud. De 5 em 5 s lê o sensor e escreve uma linha:
 
 ```
 21.90,39.70
 ```
 
-Format: `temperatura,humidade`, decimal point, two decimals (the default of `Serial.print` for floats), line ends with a newline.
+Formato: `temperatura,humidade`, ponto decimal, duas casas decimais (o comportamento por defeito do `Serial.print` com floats), a linha termina com uma mudança de linha.
 
-If either value is `NaN`, it prints `Erro a ler o DHT` instead. The server shows that as `sensor DHT sem leitura valida`.
+Se um dos valores for `NaN`, escreve `Erro a ler o DHT`. O servidor mostra isso como `sensor DHT sem leitura valida`.
 
-## Timing
+## Tempos
 
-Opening the serial port resets the Arduino. After that:
+Abrir a porta série reinicia o Arduino. Depois disso:
 
-1. The board takes about 2 s to start.
-2. The first reading is printed up to 5 s later.
+1. A placa demora cerca de 2 s a arrancar.
+2. A primeira leitura é escrita até 5 s mais tarde.
 
-The server reads with `timeout=8`, which covers both. If the cable is unplugged, the port read raises `SerialException`. The reader thread catches it, reports the error and tries to reopen the port every 2 s.
+O servidor lê com `timeout=8`, o que cobre os dois. Se o cabo for desligado, a leitura da porta levanta `SerialException`. A thread de leitura apanha-a, regista o erro e tenta reabrir a porta de 2 em 2 s.
