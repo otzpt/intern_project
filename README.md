@@ -36,8 +36,6 @@ Then open `http://127.0.0.1:8000/live`.
 
 Only temperature and humidity for now, CO2 and gas are not done
 
-A DHT read error is shown as "leitura invalida", it is not told apart from a bad line
-
 No authentication, anyone on the network can read the data if you bind it to `0.0.0.0`
 
 ## Docs

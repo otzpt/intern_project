@@ -17,7 +17,7 @@ Power, ground and any pull-up resistor wiring are not described by the code, so 
 
 Format: `temperatura,humidade`, decimal point, two decimals (the default of `Serial.print` for floats), line ends with a newline.
 
-If either value is `NaN`, it prints `Erro a ler o DHT` instead. The server shows that as `leitura invalida`.
+If either value is `NaN`, it prints `Erro a ler o DHT` instead. The server shows that as `sensor DHT sem leitura valida`.
 
 ## Timing
 

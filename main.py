@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import database as db
-from leitura import parse_linha
+from leitura import parse_linha, ErroSensor, ErroSensor
 
 PORTA = os.getenv("PORTA_SERIE", "/dev/ttyACM0")#/dev/ttyACM0" | hardcoded old port
 STATIC = Path(__file__).parent / "static"
@@ -45,6 +45,8 @@ def ler_em_fundo():
                             db.guardar(t, h)
                         except sqlite3.Error as e:
                             ultima = {"erro": f"erro na base de dados: {e}"}
+                    except ErroSensor:
+                        ultima = {"erro": "sensor DHT sem leitura valida"}
                     except ValueError:
                         ultima = {"erro": f"leitura invalida: {line!r}"}
 

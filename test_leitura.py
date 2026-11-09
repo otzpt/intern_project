@@ -1,6 +1,6 @@
 import unittest
 
-from leitura import parse_linha
+from leitura import parse_linha, ErroSensor
 
 
 class TestParseLinha(unittest.TestCase):
@@ -11,6 +11,10 @@ class TestParseLinha(unittest.TestCase):
         for linha in ["Erro a ler o DHT", "1,2,3", "abc,def", "", ",", "nan,40", "20,inf"]:
             with self.subTest(linha=linha), self.assertRaises(ValueError):
                 parse_linha(linha)
+
+    def test_erro_do_sensor(self):
+        with self.assertRaises(ErroSensor):
+            parse_linha("Erro a ler o DHT")
 
 if __name__ == "__main__":
     unittest.main()

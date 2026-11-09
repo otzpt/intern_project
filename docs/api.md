@@ -19,7 +19,8 @@ Errors return `503` with `{"detail": "<message>"}`. Messages in `main.py`:
 | `a espera da primeira leitura...` | Server just started, nothing read yet |
 | `arduino ligado, a espera da primeira leitura...` | Port opened, Arduino is rebooting (about 7 s) |
 | `sem dados do Arduino ha 8 s` | Port is open but no line arrived in 8 s |
-| `leitura invalida: '<line>'` | Line is not `temperatura,humidade` (includes the Arduino's own `Erro a ler o DHT`) |
+| `sensor DHT sem leitura valida` | The Arduino printed `Erro a ler o DHT` |
+| `leitura invalida: '<line>'` | Line is not `temperatura,humidade` |
 | `Arduino desligado. A tentar de novo... ` | Port could not be opened, retries every 2 s |
 | `erro na base de dados: <error>` | The reading was valid but saving it failed |
 
