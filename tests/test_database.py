@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from contextlib import closing
 
-import database as db
+from server import database as db
 
 
 class TestDataBase(unittest.TestCase):

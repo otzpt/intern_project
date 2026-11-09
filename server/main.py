@@ -10,8 +10,8 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-import database as db
-from leitura import ErroSensor, parse_linha
+from . import database as db
+from .leitura import ErroSensor, parse_linha
 
 PORTA = os.getenv("PORTA_SERIE", "/dev/ttyACM0")#/dev/ttyACM0" | hardcoded old port
 STATIC = Path(__file__).parent / "static"

@@ -1,6 +1,6 @@
 # API
 
-Server: FastAPI, started with `uvicorn main:app` (default `http://127.0.0.1:8000`).
+Server: FastAPI, started with `uvicorn server.main:app` (default `http://127.0.0.1:8000`).
 
 ## Routes
 
@@ -12,7 +12,7 @@ Last reading from the Arduino.
 {"temperatura": 21.9, "humidade": 39.7}
 ```
 
-Errors return `503` with `{"detail": "<message>"}`. Messages in `main.py`:
+Errors return `503` with `{"detail": "<message>"}`. Messages in `server/main.py`:
 
 | Message | Meaning |
 |---|---|
@@ -66,7 +66,7 @@ Averages in blocks of `passo` minutes, the last `n` blocks that have readings, o
 
 ### `GET /live`
 
-HTML page (`static/live.html`). It polls `/` and `/media` every second, `/historico?n=60` and `/estatisticas` every 5 s and `/medias` every 60 s. It shows the current values with the difference to the 15 min average and the min/max of the last hour, the last 60 readings, averages for 15 min, 1 h, 6 h or 24 h, a min/average/max table for 15 min to 7 days, and a day picker (last 7 days, in local time) with that day's statistics and 15 min averages. Static files are served from `/static`.
+HTML page (`server/static/live.html`). It polls `/` and `/media` every second, `/historico?n=60` and `/estatisticas` every 5 s and `/medias` every 60 s. It shows the current values with the difference to the 15 min average and the min/max of the last hour, the last 60 readings, averages for 15 min, 1 h, 6 h or 24 h, a min/average/max table for 15 min to 7 days, and a day picker (last 7 days, in local time) with that day's statistics and 15 min averages. Static files are served from `/static`.
 
 ## Database
 
@@ -79,4 +79,4 @@ SQLite file `reads.db`, created on startup in the folder the server runs from. I
 | `humidade` | REAL | Percent |
 | `hora` | TEXT | `CURRENT_TIMESTAMP`, UTC, `YYYY-MM-DD HH:MM:SS` |
 
-Only valid readings are saved. Readings older than 7 days are deleted on startup and every 720 saves (about 1 h). `database.py` opens a new connection per call, because the reading thread and the request threads cannot share one SQLite connection by default.
+Only valid readings are saved. Readings older than 7 days are deleted on startup and every 720 saves (about 1 h). `server/database.py` opens a new connection per call, because the reading thread and the request threads cannot share one SQLite connection by default.

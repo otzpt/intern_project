@@ -2,7 +2,7 @@
 
 ## Parts
 
-- Arduino connected by USB (appears as `/dev/ttyACM0` on Linux, override with the `PORTA_SERIE` environment variable, read in `main.py`)
+- Arduino connected by USB (appears as `/dev/ttyACM0` on Linux, override with the `PORTA_SERIE` environment variable, read in `server/main.py`)
 - DHT22 temperature and humidity sensor, data pin on Arduino pin 2
 
 Power, ground and any pull-up resistor wiring are not described by the code, so they are not documented here.

@@ -11,12 +11,12 @@ Proposals, not commitments. Each item says what in the code would change.
 
 ## Next sensors (CO2, gas)
 
-The line format is fixed to two numbers: `t, h = line.split(",")` in `main.py` fails with a `ValueError` on any extra field, and the table `reads` has only `temperatura` and `humidade`.
+The line format is fixed to two numbers: `t, h = line.split(",")` in `server/main.py` fails with a `ValueError` on any extra field, and the table `reads` has only `temperatura` and `humidade`.
 
 1. Choose a line format that can grow, for example `temperatura=21.9,humidade=39.7,co2=612`.
-2. Update the parser in `main.py` and the tables in `database.py`.
+2. Update the parser in `server/main.py` and the tables in `server/database.py`.
 3. Add the new fields to `/`, `/historico`, `/medias` and `docs/api.md`.
-4. Add one more chart per quantity in `static/live.html` and an entry in `GRAFICOS_ATUAL` and `GRAFICOS_MEDIA` in `static/script.js`.
+4. Add one more chart per quantity in `server/static/live.html` and an entry in `GRAFICOS_ATUAL` and `GRAFICOS_MEDIA` in `server/static/script.js`.
 
 ## Other computers (host)
 
@@ -28,7 +28,7 @@ The line format is fixed to two numbers: `t, h = line.split(",")` in `main.py` f
 
 The protocol does not depend on the board: any board that prints `temperatura,humidade` once per line at 9600 baud works with the server as it is.
 
-- The baud rate `9600` is hardcoded in `main.py` (`serial.Serial(PORTA, 9600, ...)`) and in `arduino/main/main.ino`. A different rate needs both changed. Making it an environment variable like `PORTA_SERIE` would avoid editing the code.
+- The baud rate `9600` is hardcoded in `server/main.py` (`serial.Serial(PORTA, 9600, ...)`) and in `arduino/main/main.ino`. A different rate needs both changed. Making it an environment variable like `PORTA_SERIE` would avoid editing the code.
 - The sketch uses the `DHT.h` library and pin 2. Other boards may use different pin numbers.
 
 ## More than one device
@@ -41,7 +41,7 @@ Today there is one port, one reader thread and one table with no device column. 
 
 ## Wireless instead of USB
 
-A board with Wi-Fi could send each reading with an HTTP `POST` instead of the serial port. That needs a new route in `main.py` that validates the body, and a decision on authentication, since the server has none now.
+A board with Wi-Fi could send each reading with an HTTP `POST` instead of the serial port. That needs a new route in `server/main.py` that validates the body, and a decision on authentication, since the server has none now.
 
 ## Tests
 
