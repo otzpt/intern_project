@@ -22,11 +22,21 @@ setInterval(atualizar, 1000);
 
 const button_state_mode = document.getElementById("darkmode");
 
-button_state_mode.addEventListener("click", function () {
-  // toggle devolve true quando a classe ficou ligada
-  const escuro = document.body.classList.toggle("dark");
-  // o texto diz para que modo vai mudar
+// liga ou desliga o modo escuro e ajusta o texto
+function aplicarTema(escuro) {
+  document.body.classList.toggle("dark", escuro);
+  // texto indica a que modo ira mudar
   button_state_mode.textContent = escuro ? "light" : "dark";
+}
+
+// getItem devolve null se nunca guardaste nada, e "true" e um texto, nao um booleano
+aplicarTema(localStorage.getItem("tema") === "dark");
+
+button_state_mode.addEventListener("click", function () {
+  const escuro = !document.body.classList.contains("dark");
+
+  aplicarTema(escuro);
+  localStorage.setItem("tema", escuro ? "dark" : "light");
 });
 
 // unidades do viewBox do svg, nao pixeis
