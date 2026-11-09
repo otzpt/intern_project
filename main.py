@@ -10,7 +10,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import database as db
-from leitura import parse_linha, ErroSensor, ErroSensor
+from leitura import ErroSensor, parse_linha
 
 PORTA = os.getenv("PORTA_SERIE", "/dev/ttyACM0")#/dev/ttyACM0" | hardcoded old port
 STATIC = Path(__file__).parent / "static"
@@ -22,15 +22,18 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 ultima = {"erro": "a espera da primeira leitura..."}
 
 db.init_db()
+db.apagar_antigas(7)
 
 
 def ler_em_fundo():
     global ultima
+    guardadas = 0
     while True:
         try:
             # Abrir a porta reinicia o Arduino: arranque (~2 s) + intervalo de 5 s. timeout=8 trata disso.
             with serial.Serial(PORTA, 9600, timeout = 8) as ser:
                 ultima= {"erro": "arduino ligado, a espera da primeira leitura..."}
+
                 while True:
                     line = ser.readline().decode(errors="replace").strip()
 
@@ -43,8 +46,13 @@ def ler_em_fundo():
 
                         try:
                             db.guardar(t, h)
+                            guardadas += 1
+
+                            if guardadas % 720 == 0:
+                                db.apagar_antigas(7)
                         except sqlite3.Error as e:
                             ultima = {"erro": f"erro na base de dados: {e}"}
+
                     except ErroSensor:
                         ultima = {"erro": "sensor DHT sem leitura valida"}
                     except ValueError:

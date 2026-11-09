@@ -50,3 +50,12 @@ def medias_por_minuto(n=30):
             (n,),
         ).fetchall()
     return linhas[::-1]
+
+def apagar_antigas(dias = 7):
+    with closing(sqlite3.connect(DB)) as con:
+        apagadas = con.execute(
+            "DELETE FROM reads WHERE hora < datetime('now', ?)",
+            (f"-{dias} days",),
+        ).rowcount
+        con.commit()
+    return apagadas

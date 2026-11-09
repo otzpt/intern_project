@@ -46,6 +46,12 @@ class TestDataBase(unittest.TestCase):
             [("2026-11-06 12:00", 21.0, 55.0), ("2026-11-06 12:01", 30.0, 70.0)],
         )
 
+    def test_apagar_antigas(self):
+        self.inserir("2000-01-01 00:00:00", 99.0, 99.0)
+        db.guardar(20.0, 50.0)
+
+        self.assertEqual(db.apagar_antigas(7), 1)
+        self.assertEqual(len(db.ultimas(10)), 1)
 
 if __name__ == "__main__":
     unittest.main()

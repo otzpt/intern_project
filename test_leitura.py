@@ -1,6 +1,6 @@
 import unittest
 
-from leitura import parse_linha, ErroSensor
+from leitura import ErroSensor, parse_linha
 
 
 class TestParseLinha(unittest.TestCase):

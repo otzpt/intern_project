@@ -69,4 +69,4 @@ SQLite file `reads.db`, created on startup in the folder the server runs from. I
 | `humidade` | REAL | Percent |
 | `hora` | TEXT | `CURRENT_TIMESTAMP`, UTC, `YYYY-MM-DD HH:MM:SS` |
 
-Only valid readings are saved. `database.py` opens a new connection per call, because the reading thread and the request threads cannot share one SQLite connection by default.
+Only valid readings are saved. Readings older than 7 days are deleted on startup and every 720 saves (about 1 h). `database.py` opens a new connection per call, because the reading thread and the request threads cannot share one SQLite connection by default.
