@@ -7,10 +7,10 @@ Goal is temperature, humidity, CO2 and gas. Right now only temperature and humid
 ## Features
 
 - **Temperature and humidity**: DHT22 on pin 2, read every 5 s by `arduino/main/main.ino`
-- **Live page**: `/live` shows the current reading, the 15 min average and four charts (temperature and humidity, last 60 readings and per-minute averages), with a dark mode switch
+- **Live page**: `/live` shows the current reading against the 15 min average, live charts, averages and min/average/max statistics for several periods, and any one of the last 7 days on its own, with a dark mode switch that is remembered
 - **History**: every valid reading is saved in SQLite (`reads.db`, created on startup), so the average survives a server restart. Readings older than 7 days are deleted
 - **Reconnects by itself**: unplug the Arduino and the page shows an error, plug it back and it recovers with no restart
-- **Routes**: `/` last reading as JSON (503 on error), `/media` average of the last 15 min (404 if there are no readings), `/historico` the last N readings, `/medias` per-minute averages, `/live` the page
+- **Routes**: `/` last reading as JSON (503 on error), `/media` average of the last 15 min (404 if there are no readings), `/historico` the last N readings, `/medias` averages in blocks of N minutes, `/estatisticas` min/average/max (last N minutes or a fixed period), `/live` the page
 
 ## How to run
 

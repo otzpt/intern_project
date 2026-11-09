@@ -2,6 +2,7 @@
 
 /* Modo claro (por defeito). Neutros sem tom (chroma 0), nunca #fff/#000 puros. */
 :root {
+    color-scheme: light;
     --cor-fundo: oklch(0.97 0 0);
     --cor-texto: oklch(0.2 0 0);
     --cor-fundo-navbar: oklch(0.97 0 0 / 0.8);
@@ -10,10 +11,13 @@
     /* mesma luminosidade e chroma, so muda o tom (DESIGN_RULES) */
     --cor-temperatura: oklch(0.55 0.17 45);
     --cor-humidade: oklch(0.55 0.17 250);
+    --cor-ok: oklch(0.55 0.15 150);
+    --cor-erro: oklch(0.55 0.17 25);
 }
 
 /* Modo escuro: so troca os valores, as regras abaixo nao mudam. */
 body.dark {
+    color-scheme: dark;
     --cor-fundo: oklch(0.16 0 0);
     --cor-texto: oklch(0.94 0 0);
     --cor-fundo-navbar: oklch(0.16 0 0 / 0.8);
@@ -21,10 +25,13 @@ body.dark {
     --cor-borda-navbar: oklch(1 0 0 / 0.12);
     --cor-temperatura: oklch(0.75 0.15 45);
     --cor-humidade: oklch(0.75 0.15 250);
+    --cor-ok: oklch(0.75 0.15 150);
+    --cor-erro: oklch(0.75 0.15 25);
 }
 
 body {
     margin: 0;
+    font-family: system-ui, sans-serif;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
 }
@@ -83,17 +90,183 @@ body {
     outline-offset: 2px;
 }
 
-section {
-    padding: 24px 16px;
+main {
     max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 16px;
+}
+
+section {
+    padding: 32px 0;
     /* a nav e sticky: sem isto o titulo da seccao fica por baixo dela ao saltar por um link */
     scroll-margin-top: 72px;
 }
 
 h2 {
     margin: 0 0 8px;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     line-height: 1.2;
+}
+
+.nota {
+    margin: 0 0 16px;
+    font-size: 0.875rem;
+}
+
+/* estado da ligacao: a bolinha cheia e ok, o anel vazio e erro (o texto diz o mesmo) */
+.estado {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 24px;
+    font-size: 0.875rem;
+}
+
+.estado::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    box-sizing: border-box;
+    border: 2px solid var(--cor-borda-navbar);
+    border-radius: 50%;
+}
+
+.estado.ok::before {
+    background: var(--cor-ok);
+    border-color: var(--cor-ok);
+}
+
+.estado.erro::before {
+    border-color: var(--cor-erro);
+}
+
+/* o numero grande e a peca central da pagina */
+.leituras {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 32px;
+}
+
+.leitura {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid var(--cor-borda-navbar);
+}
+
+.nome {
+    font-size: 0.875rem;
+}
+
+.valor {
+    font-size: clamp(3.5rem, 14vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--cor-serie);
+}
+
+.un {
+    margin-left: 8px;
+    font-size: 0.3em;
+    font-weight: 400;
+    color: var(--cor-texto);
+}
+
+.delta {
+    min-height: 1.4em;
+    font-size: 0.875rem;
+}
+
+.periodos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.periodos input {
+    padding: 8px 16px;
+    border: 1px solid var(--cor-borda-navbar);
+    border-radius: 8px;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+}
+
+.periodos button {
+    padding: 8px 16px;
+    border: 1px solid var(--cor-borda-navbar);
+    border-radius: 8px;
+    background: transparent;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+
+.periodos button:hover,
+.periodos button[aria-pressed="true"] {
+    background-color: var(--cor-hover-navbar);
+}
+
+.periodos button[aria-pressed="true"] {
+    border-color: var(--cor-texto);
+}
+
+.periodos button:focus-visible,
+.periodos input:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+}
+
+caption {
+    text-align: left;
+}
+
+th,
+td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--cor-borda-navbar);
+    text-align: right;
+}
+
+th:first-child {
+    text-align: left;
+}
+
+th[scope="row"]::before {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-right: 8px;
+    border-radius: 50%;
+    background: var(--cor-serie);
+}
+
+footer {
+    padding: 16px 0;
+    border-top: 1px solid var(--cor-borda-navbar);
+}
+
+@media (max-width: 640px) {
+    .button_left {
+        position: static;
+        transform: none;
+    }
+
+    #nav nav {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 .graficos {

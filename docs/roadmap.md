@@ -42,3 +42,9 @@ Today there is one port, one reader thread and one table with no device column. 
 ## Wireless instead of USB
 
 A board with Wi-Fi could send each reading with an HTTP `POST` instead of the serial port. That needs a new route in `main.py` that validates the body, and a decision on authentication, since the server has none now.
+
+## Tests
+
+```bash
+python -m unittest -v
+```
