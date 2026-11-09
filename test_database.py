@@ -6,6 +6,7 @@ from contextlib import closing
 
 import database as db
 
+
 class TestDataBase(unittest.TestCase):
     def setUp(self):
         self.dir = tempfile.TemporaryDirectory()
