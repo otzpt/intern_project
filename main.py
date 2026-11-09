@@ -10,6 +10,7 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 import database as db
+from leitura import parse_linha
 
 PORTA = os.getenv("PORTA_SERIE", "/dev/ttyACM0")#/dev/ttyACM0" | hardcoded old port
 STATIC = Path(__file__).parent / "static"
@@ -37,14 +38,13 @@ def ler_em_fundo():
                         ultima = {"erro": "sem dados do Arduino ha 8 s"}
                         continue
                     try:
-                        t, h = line.split(",") # guardar temperatura e humidade
-                        ultima = {"temperatura": float(t), "humidade": float(h)}
+                        t, h = parse_linha(line)
+                        ultima = {"temperatura": t, "humidade": h}
 
                         try:
-                            db.guardar(float(t), float(h))
+                            db.guardar(t, h)
                         except sqlite3.Error as e:
                             ultima = {"erro": f"erro na base de dados: {e}"}
-
                     except ValueError:
                         ultima = {"erro": f"leitura invalida: {line!r}"}
 
