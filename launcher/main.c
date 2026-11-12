@@ -31,8 +31,17 @@ void menu_status_server()
     puts("========================");
 }
 
+void wait_enter(int *pressed_key)
+{
+    *pressed_key = getchar();
+    while (*pressed_key != '\n' && *pressed_key != EOF) {
+        *pressed_key = getchar();
+    }
+}
+
 int main(void) {
     int option;
+    int pressed_key = ' ';
 
     while(1) {
         menu();
@@ -43,12 +52,12 @@ int main(void) {
             server_start();
             // dar tempo para o user ler
             puts("press enter to continue...");
-            getchar();
+            wait_enter(&pressed_key);
         } else if (option == 2) {
             server_stop();
             // dar tempo para o user ler
             puts("press enter to continue...");
-            getchar();
+            wait_enter(&pressed_key);
         } else if (option == 3){
             menu_status_server();
             input("Enter the option you want to use: ", &option);
@@ -64,25 +73,25 @@ int main(void) {
                 printf("live:    %s\n", result3 == 0 ? "on" : "off");
                 // dar tempo para o user ler
                 puts("press enter to continue...");
-                getchar();
+                wait_enter(&pressed_key);
             } else if (option == 2) {
                 int result = server_status("process");
                 printf("process: %s\n", result == 0 ? "on" : "off");
                 // dar tempo para o user ler
                 puts("press enter to continue...");
-                getchar();
+                wait_enter(&pressed_key);
             } else if (option == 3) {
                 int result = server_status("http");
                 printf("http:    %s\n", result == 0 ? "on" : "off");
                 // dar tempo para o user ler
                 puts("press enter to continue...");
-                getchar();
+                wait_enter(&pressed_key);
             } else if (option == 4) {
                 int result = server_status("live");
                 printf("live:    %s\n", result == 0 ? "on" : "off");
                 // dar tempo para o user ler
                 puts("press enter to continue...");
-                getchar();
+                wait_enter(&pressed_key);
             } else if (option == 0) {
                 continue;
             } else {

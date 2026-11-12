@@ -9,6 +9,10 @@ void input_int(const char *prompt, int *val) {
         if (sscanf(buf, "%d", val) != 1) {
             *val = -1;
         }
+    } else {
+        // fim da entrada (Ctrl+D ou ficheiro acabou): sem isto o valor antigo
+        // ficava e um ciclo que repete a opcao nunca acabava
+        *val = 0;
     }
 }
 
@@ -19,6 +23,8 @@ void input_float(const char *prompt, float *val) {
         if (sscanf(buf, "%f", val) != 1) {
             *val = 0.0f;
         }
+    } else {
+        *val = 0.0f; // fim da entrada
     }
 }
 
@@ -29,6 +35,8 @@ void input_double(const char *prompt, double *val) {
         if (sscanf(buf, "%lf", val) != 1) {
             *val = 0.0;
         }
+    } else {
+        *val = 0.0; // fim da entrada
     }
 }
 
@@ -37,6 +45,8 @@ void input_char(const char *prompt, char *val) {
     printf("%s", prompt);
     if (fgets(buf, sizeof(buf), stdin) != NULL) {
         *val = buf[0];
+    } else {
+        *val = '\0'; // fim da entrada
     }
 }
 
@@ -44,5 +54,7 @@ void input_str(const char *prompt, char *buf, size_t size) {
     printf("%s", prompt);
     if (fgets(buf, (int)size, stdin) != NULL) {
         buf[strcspn(buf, "\n")] = '\0';
+    } else {
+        buf[0] = '\0'; // fim da entrada: texto vazio, e nao lixo que la estava
     }
 }
