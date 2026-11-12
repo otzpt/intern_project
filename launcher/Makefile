@@ -1,6 +1,10 @@
 # make       compila o launcher
 # make run   compila e corre (corre a partir desta pasta: o SENSOR_ROOT por defeito e "..")
 # make clean apaga o binario e os ficheiros gerados
+#
+# Windows (NAO testado): precisa do MSYS2/MinGW (gcc e make) e do curl.exe.
+# Defina PORTA_SERIE com a porta do Arduino (por exemplo COM3) antes de correr,
+# e o venv tem de ter sido criado em .venv (o launcher usa .venv\Scripts\uvicorn.exe).
 CC     = gcc
 CFLAGS = -Wall -Wextra -Wshadow -g
 
