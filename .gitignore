@@ -2,3 +2,16 @@
 __pycache__/
 .wakatime-project
 *.db
+launcher/launcher
+launcher/compile_commands.json
+launcher/prototype/launcher
+launcher/prototype/compile_commands.json
+launcher/.cache/
+launcher/.clangd
+launcher/prototype_2/launcher
+launcher/prototype_2/compile_commands.json
+launcher/prototype_2/.clangd
+launcher/*.o
+launcher/*.d
+server.log
+server.pid

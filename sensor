@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Uso: ./sensor setup | start [--porta PORTA] | status
+cd "$(dirname "$0")" || exit 1
+
+case "$1" in
+  setup)
+    # cria a .venv (so se nao existir) e instala as dependencias
+    [ -d .venv ] || python3 -m venv .venv
+    .venv/bin/pip install -r requirements.txt
+    ;;
+  start)
+    shift
+    [ -x .venv/bin/uvicorn ] || { echo "falta a .venv, corre primeiro: ./sensor setup"; exit 1; }
+    # porta serie do Arduino, por defeito /dev/ttyACM0
+    if [ "$1" = "--porta" ] && [ -n "$2" ]; then export PORTA_SERIE="$2"; fi
+    echo "Servidor em http://127.0.0.1:8000/live (Ctrl+C para parar)"
+    exec .venv/bin/uvicorn server.main:app
+    ;;
+  status)
+    # mostra a ultima leitura, ou o erro que o servidor devolve
+    resposta=$(curl -s --max-time 2 http://127.0.0.1:8000/) && echo "$resposta" || echo "servidor desligado"
+    ;;
+  *)
+    echo "uso: ./sensor setup | start [--porta PORTA] | status"
+    exit 1
+    ;;
+esac

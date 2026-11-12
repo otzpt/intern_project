@@ -26,6 +26,15 @@ uvicorn server.main:app
 
 Depois abre `http://127.0.0.1:8000/live`.
 
+Em alternativa, o script `sensor` trata da `.venv` e do `uvicorn` por ti:
+
+```bash
+./sensor setup                      # so a primeira vez: cria a .venv e instala as dependencias
+./sensor start                      # arranca o servidor
+./sensor start --porta /dev/ttyUSB0 # com outra porta serie
+./sensor status                     # mostra a ultima leitura ou o erro
+```
+
 ## Testes
 
 ```bash
