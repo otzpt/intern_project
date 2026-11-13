@@ -43,3 +43,7 @@ Hoje há uma porta, uma thread de leitura e uma tabela sem coluna de dispositivo
 ## Sem fios em vez de USB
 
 Uma placa com Wi-Fi podia enviar cada leitura com um `POST` HTTP em vez de usar a porta série. Isso pede uma rota nova em `server/main.py` que valide o corpo do pedido, e uma decisão sobre autenticação, já que o servidor não tem nenhuma.
+
+## Launcher em ncurses
+
+Um terceiro protótipo do launcher, depois do GTK (`launcher/prototype/`) e do raylib (`launcher/prototype_2/`), desta vez em ncurses, para ser mais rápido e mais fácil de usar do que o menu de `launcher/main.c`. Ficava em `launcher/prototype_3/`. As funções de arrancar, parar e ver o estado em `server_commands.c/.h` podiam ser reutilizadas, mudava só a interface.

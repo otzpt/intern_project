@@ -15,3 +15,5 @@ launcher/*.o
 launcher/*.d
 server.log
 server.pid
+.claude/personal.md
+Projeto do estágio.md
