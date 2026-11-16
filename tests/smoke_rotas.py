@@ -48,7 +48,7 @@ def test_grounds():
             print(f"FALHOU {caminho} esperado {codigo}, obtido {obtido}{detalhe}")
             fail += 1
 
-    if passes < len(paths):
+    if passes < len(paths): # apenas se algum falhar
         print(f"\n{passes} testes passaram e {fail} falharam")
     # se algum teste falhar, o programa sai com o codigo 1,
     # assim o `echo $?` mostra 1 quando algo falha, em vez de 0

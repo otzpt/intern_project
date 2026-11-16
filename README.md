@@ -41,6 +41,10 @@ Em alternativa, o script `sensor` trata da `.venv` e do `uvicorn` por ti:
 .venv/bin/python -m unittest -v
 ```
 
+## Protótipo do launcher em raylib
+
+`launcher/prototype_2/` precisa do `raygui.h`, que não está no Git (código de terceiros, 300 KB). Descarrega-o de https://github.com/raysan5/raygui e põe-no nessa pasta. O ficheiro usado aqui é a versão 5.1-dev, por isso uma release mais antiga pode não compilar. O raylib é procurado em `~/libs/raylib/src` (ver o `Makefile`).
+
 ## Limitações
 
 Por agora só temperatura e humidade, o CO2 e o gás ainda não estão feitos.
