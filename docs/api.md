@@ -64,6 +64,17 @@ Médias em blocos de `passo` minutos, os últimos `n` blocos que têm leituras, 
 
 `minuto` é o início do bloco (UTC). A entrada mais recente é o bloco em curso, por isso a média ainda está incompleta.
 
+### `GET /estado`
+
+O que o servidor guarda e o estado do Arduino. Responde sempre `200`, mesmo sem leituras ou com o Arduino desligado.
+
+```json
+{"leituras": 1432, "primeira": "2026-11-09 08:00:05", "ultima_leitura": "2026-11-16 12:54:07",
+ "retencao_dias": 7, "porta": "/dev/ttyACM0", "arduino": "a receber leituras"}
+```
+
+`primeira` e `ultima_leitura` são UTC, `YYYY-MM-DD HH:MM:SS`, e `null` quando a tabela está vazia. `arduino` é `a receber leituras` ou uma das mensagens de erro de `GET /`.
+
 ### `GET /live`
 
 Página HTML (`server/static/live.html`). Pede `/` e `/media` todos os segundos, `/historico?n=60` e `/estatisticas` de 5 em 5 s e `/medias` de 60 em 60 s. Mostra os valores atuais com a diferença para a média de 15 min e o mínimo e máximo da última hora, as últimas 60 leituras, médias de 15 min, 1 h, 6 h ou 24 h, uma tabela de mínimo, média e máximo de 15 min a 7 dias, e um seletor de dia (últimos 7 dias, em hora local) com as estatísticas desse dia e médias de 15 min. Os ficheiros estáticos são servidos em `/static`.

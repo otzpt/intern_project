@@ -329,3 +329,30 @@ document.getElementById("dia_seguinte").addEventListener("click", () => mudarDia
 
 carregarDia();
 setInterval(carregarDia, 60000);
+
+// --- Sistema: o que o servidor guarda e o estado do Arduino ---
+// "2026-11-06 12:54:07" (UTC) -> data e hora local
+function dataHoraLocal(hora) {
+  return new Date(hora.replace(" ", "T") + "Z").toLocaleString("pt-PT");
+}
+
+async function carregarSistema() {
+  const nota = document.getElementById("sistema_nota");
+  try {
+    const r = await fetch("/estado");
+    const d = await r.json();
+
+    document.getElementById("s_leituras").textContent = d.leituras;
+    document.getElementById("s_primeira").textContent = d.primeira ? dataHoraLocal(d.primeira) : "--";
+    document.getElementById("s_ultima").textContent = d.ultima_leitura ? dataHoraLocal(d.ultima_leitura) : "--";
+    document.getElementById("s_retencao").textContent = `${d.retencao_dias} dias`;
+    document.getElementById("s_porta").textContent = d.porta;
+    document.getElementById("s_arduino").textContent = d.arduino;
+    nota.textContent = `Atualizado as ${new Date().toLocaleTimeString("pt-PT")}`;
+  } catch (e) {
+    nota.textContent = "Sem ligacao ao servidor";
+  }
+}
+
+carregarSistema();
+setInterval(carregarSistema, 5000);

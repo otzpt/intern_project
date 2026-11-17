@@ -75,6 +75,12 @@ def estatisticas(minutos=60, de=None, ate=None):
         ).fetchone()
 
 
+# n.º de leituras guardadas e hora (UTC) da primeira e da ultima; (0, None, None) se estiver vazia
+def resumo():
+    with closing(sqlite3.connect(DB)) as con:
+        return con.execute("SELECT COUNT(*), MIN(hora), MAX(hora) FROM reads").fetchone()
+
+
 # retencao: apaga o que tem mais de `dias` dias e devolve quantas linhas apagou
 def apagar_antigas(dias = 7):
     with closing(sqlite3.connect(DB)) as con:

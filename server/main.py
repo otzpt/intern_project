@@ -15,6 +15,7 @@ from .leitura import ErroSensor, parse_linha
 
 PORTA = os.getenv("PORTA_SERIE", "/dev/ttyACM0")#/dev/ttyACM0" | hardcoded old port
 STATIC = Path(__file__).parent / "static"
+RETENCAO_DIAS = 7
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
@@ -23,7 +24,7 @@ app.mount("/static", StaticFiles(directory=STATIC), name="static")
 ultima = {"erro": "a espera da primeira leitura..."}
 
 db.init_db()
-db.apagar_antigas(7)
+db.apagar_antigas(RETENCAO_DIAS)
 
 
 # Thread que le a porta serie para sempre e guarda cada leitura valida.
@@ -54,7 +55,7 @@ def ler_em_fundo():
                             guardadas += 1
 
                             if guardadas % 720 == 0:
-                                db.apagar_antigas(7)
+                                db.apagar_antigas(RETENCAO_DIAS)
                         except sqlite3.Error as e:
                             ultima = {"erro": f"erro na base de dados: {e}"}
 
@@ -78,6 +79,20 @@ def root():
     if "erro" in ultima:
         raise HTTPException(503, ultima["erro"])
     return ultima
+
+
+# o que o servidor guarda e em que estado esta o Arduino (secao "Sistema" da pagina)
+@app.get("/estado")
+def estado():
+    n, primeira, mais_recente = db.resumo()
+    return {
+        "leituras": n,
+        "primeira": primeira,
+        "ultima_leitura": mais_recente,
+        "retencao_dias": RETENCAO_DIAS,
+        "porta": PORTA,
+        "arduino": ultima.get("erro", "a receber leituras"),
+    }
 
 
 # a pagina

@@ -6,8 +6,9 @@ from urllib.request import HTTPError, urlopen
 MSG_TIMEOUT = "Servidor não respondeu a tempo, verifique a ligação ao servidor"
 
 paths = [
-    # 9 testes
+    # 10 testes
     ("/live", 200),
+    ("/estado", 200),
     ("/historico", 200),
     ("/medias", 200),
     ("/medias?passo=7", 422),

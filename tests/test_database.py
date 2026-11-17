@@ -71,6 +71,14 @@ class TestDataBase(unittest.TestCase):
             [("2026-11-06 12:00", 21.0, 55.0), ("2026-11-06 12:05", 30.0, 70.0)],
         )
 
+    def test_resumo(self):
+        self.assertEqual(db.resumo(), (0, None, None))
+
+        self.inserir("2026-11-06 12:00:00", 20.0, 50.0)
+        self.inserir("2026-11-06 12:30:00", 22.0, 60.0)
+
+        self.assertEqual(db.resumo(), (2, "2026-11-06 12:00:00", "2026-11-06 12:30:00"))
+
     def test_intervalo_de_ate(self):
         self.inserir("2026-11-05 23:59:59", 1.0, 1.0)
         self.inserir("2026-11-06 00:00:00", 20.0, 50.0)

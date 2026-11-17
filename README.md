@@ -10,7 +10,7 @@ O objetivo é temperatura, humidade, CO2 e gás. Por agora só funcionam a tempe
 - **Página ao vivo**: `/live` mostra a leitura atual comparada com a média de 15 min, gráficos ao vivo, médias e estatísticas (mínimo, média e máximo) para vários períodos, e qualquer um dos últimos 7 dias em separado, com um botão de modo escuro que fica guardado
 - **Histórico**: cada leitura válida é guardada em SQLite (`reads.db`, criada no arranque), por isso a média sobrevive a um reinício do servidor. As leituras com mais de 7 dias são apagadas
 - **Volta a ligar sozinho**: se desligares o Arduino a página mostra um erro, e se o voltares a ligar recupera sem reiniciar
-- **Rotas**: `/` última leitura em JSON (503 em caso de erro), `/media` média dos últimos 15 min (404 se não houver leituras), `/historico` as últimas N leituras, `/medias` médias em blocos de N minutos, `/estatisticas` mínimo, média e máximo (últimos N minutos ou um período fixo), `/live` a página
+- **Rotas**: `/` última leitura em JSON (503 em caso de erro), `/media` média dos últimos 15 min (404 se não houver leituras), `/historico` as últimas N leituras, `/medias` médias em blocos de N minutos, `/estatisticas` mínimo, média e máximo (últimos N minutos ou um período fixo), `/estado` quantas leituras há guardadas e em que estado está o Arduino, `/live` a página
 
 ## Como correr
 
