@@ -10,9 +10,8 @@
 - `launcher/prototype/` (GTK) e `launcher/prototype_2/` (raylib+raygui). O `raygui.h` (terceiros, 300 KB, versão 5.1-dev) já não está no Git: está no `.gitignore` e o README diz onde o obter. Continua no disco e no histórico.
 
 ## Pendentes, por peso
-1. Pequeno: `carregarSistema()` em `server/static/script.js` mostra "undefined dias" quando `/estado` não responde 200 (visto com o servidor antigo); falta um `if (!r.ok)` como nas outras funções. O ramo não foi testado.
-2. Testar o launcher num Windows. O código já está no `main`; o ramo `windows-launcher` (local e remoto) continua a existir, contido no `main`, e pode ser apagado.
-3. CO2/gás quando houver sensores (`docs/roadmap.md`; a `reads.db` precisa de migração).
+1. Testar o launcher num Windows. O código já está no `main`; o ramo `windows-launcher` (local e remoto) continua a existir, contido no `main`, e pode ser apagado.
+2. CO2/gás quando houver sensores (`docs/roadmap.md`; a `reads.db` precisa de migração).
 
 ## Exercícios de aprendizagem em curso
 - `~/projects/random_stuff/main.c` (ncurses, `@` com `a d w s`): ordem `getch, erase, mov, desenhar, refresh`. Aprendido: o `getch` faz refresh implícito; o `@@` vinha do `mov` depois do desenho; o "não aparece" vinha de `y = 50` fora do ecrã. Regra: mudar uma coisa de cada vez.

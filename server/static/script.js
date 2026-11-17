@@ -340,6 +340,10 @@ async function carregarSistema() {
   const nota = document.getElementById("sistema_nota");
   try {
     const r = await fetch("/estado");
+    if (!r.ok) {
+      nota.textContent = `O servidor respondeu ${r.status} ao pedido de estado`;
+      return;
+    }
     const d = await r.json();
 
     document.getElementById("s_leituras").textContent = d.leituras;
