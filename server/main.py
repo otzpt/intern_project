@@ -2,6 +2,7 @@ import os
 import sqlite3
 import threading
 import time
+from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -17,14 +18,23 @@ PORTA = os.getenv("PORTA_SERIE", "/dev/ttyACM0")#/dev/ttyACM0" | hardcoded old p
 STATIC = Path(__file__).parent / "static"
 RETENCAO_DIAS = 7
 
-app = FastAPI()
+
+@asynccontextmanager
+async def  lifespan(app):
+    db.init_db()
+    db.apagar_antigas(RETENCAO_DIAS)
+
+    threading.Thread(target=ler_em_fundo, daemon=True).start()
+    yield
+
+
+
+app = FastAPI(lifespan = lifespan)
+
 app.mount("/static", StaticFiles(directory=STATIC), name="static")
 
 # Ultima leitura do Arduino. So a thread de leitura escreve aqui; os pedidos so leem.
 ultima = {"erro": "a espera da primeira leitura..."}
-
-db.init_db()
-db.apagar_antigas(RETENCAO_DIAS)
 
 
 # Thread que le a porta serie para sempre e guarda cada leitura valida.
@@ -68,9 +78,6 @@ def ler_em_fundo():
             # Arduino desligado ou porta ocupada: tenta abrir de novo em 2 s.
             ultima = {"erro": "Arduino desligado. A tentar de novo... "} # mete ({e}) no final e f no inicio antes do " se quiseres debug
             time.sleep(2)
-
-
-threading.Thread(target=ler_em_fundo, daemon=True).start()
 
 
 # ultima leitura do Arduino (503 se houver erro)

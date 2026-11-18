@@ -16,3 +16,8 @@ pydantic_core==2.50.4
 starlette==1.10.0
 typing-inspection==0.4.5
 typing_extensions==4.16.0
+
+# So para testes (tests/test_rotas.py)
+httpx==0.28.1
+httpcore==1.0.9
+certifi==2026.10.23

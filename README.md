@@ -41,6 +41,8 @@ Em alternativa, o script `sensor` trata da `.venv` e do `uvicorn` por ti:
 .venv/bin/python -m unittest -v
 ```
 
+Inclui os testes das rotas (`tests/test_rotas.py`), que usam uma base de dados temporária e não precisam do servidor nem do Arduino. Com o servidor ligado, `tests/smoke_rotas.py` testa as rotas por HTTP.
+
 ## Simulador do Arduino
 
 Para ensaiar sem hardware, `tests/simulador.py` cria uma porta série virtual e escreve nela uma leitura aleatória de 5 em 5 s (1 em 10 é `Erro a ler o DHT`). Corre-o, copia o caminho que imprime (`/dev/pts/N`) e arranca o servidor com ele:
