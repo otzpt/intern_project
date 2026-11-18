@@ -41,6 +41,17 @@ Em alternativa, o script `sensor` trata da `.venv` e do `uvicorn` por ti:
 .venv/bin/python -m unittest -v
 ```
 
+## Simulador do Arduino
+
+Para ensaiar sem hardware, `tests/simulador.py` cria uma porta série virtual e escreve nela uma leitura aleatória de 5 em 5 s (1 em 10 é `Erro a ler o DHT`). Corre-o, copia o caminho que imprime (`/dev/pts/N`) e arranca o servidor com ele:
+
+```bash
+.venv/bin/python tests/simulador.py
+./sensor start --porta /dev/pts/N    # noutro terminal
+```
+
+As leituras ficam na `reads.db` como as reais. Se parares o simulador, o servidor mostra `Arduino desligado`.
+
 ## Protótipo do launcher em raylib
 
 `launcher/prototype_2/` precisa do `raygui.h`, que não está no Git (código de terceiros, 300 KB). Descarrega-o de https://github.com/raysan5/raygui e põe-no nessa pasta. O ficheiro usado aqui é a versão 5.1-dev, por isso uma release mais antiga pode não compilar. O raylib é procurado em `~/libs/raylib/src` (ver o `Makefile`).
