@@ -60,7 +60,7 @@ As leituras ficam na `reads.db` como as reais. Se parares o simulador, o servido
 
 Por agora só temperatura e humidade, o CO2 e o gás ainda não estão feitos.
 
-Não há autenticação: se o servidor ouvir em `0.0.0.0`, qualquer pessoa na rede pode ler os dados.
+Não há autenticação. Por defeito o servidor só ouve em `127.0.0.1` (só este computador). Se o arrancares com `--host 0.0.0.0`, qualquer pessoa na rede pode ler os dados, por isso não o faças sem pôr autenticação primeiro.
 
 ## Documentação
 
