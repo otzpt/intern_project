@@ -1,13 +1,15 @@
 /* Estilos da pagina /live */
 
-/* Modo claro (por defeito). Neutros sem tom (chroma 0), nunca #fff/#000 puros. */
+/* Modo claro (por defeito). Neutros frios quase sem croma (DESIGN_RULES), nunca #fff/#000 puros. */
 :root {
     color-scheme: light;
-    --cor-fundo: oklch(0.97 0 0);
-    --cor-texto: oklch(0.2 0 0);
-    --cor-fundo-navbar: oklch(0.97 0 0 / 0.8);
-    --cor-hover-navbar: oklch(0.2 0 0 / 0.08);
-    --cor-borda-navbar: oklch(0.2 0 0 / 0.12);
+    --cor-fundo: oklch(0.96 0.004 255);
+    --cor-superficie: oklch(0.99 0.003 255);
+    --cor-texto: oklch(0.22 0.01 255);
+    --cor-texto-suave: oklch(0.45 0.01 255);
+    --cor-hover-navbar: oklch(0.22 0.01 255 / 0.07);
+    --cor-ativo: oklch(0.22 0.01 255 / 0.12);
+    --cor-borda-navbar: oklch(0.22 0.01 255 / 0.13);
     /* mesma luminosidade e chroma, so muda o tom (DESIGN_RULES) */
     --cor-temperatura: oklch(0.55 0.17 45);
     --cor-humidade: oklch(0.55 0.17 250);
@@ -18,10 +20,12 @@
 /* Modo escuro: so troca os valores, as regras abaixo nao mudam. */
 body.dark {
     color-scheme: dark;
-    --cor-fundo: oklch(0.16 0 0);
-    --cor-texto: oklch(0.94 0 0);
-    --cor-fundo-navbar: oklch(0.16 0 0 / 0.8);
-    --cor-hover-navbar: oklch(1 0 0 / 0.1);
+    --cor-fundo: oklch(0.16 0.008 255);
+    --cor-superficie: oklch(0.2 0.009 255);
+    --cor-texto: oklch(0.95 0.004 255);
+    --cor-texto-suave: oklch(0.72 0.01 255);
+    --cor-hover-navbar: oklch(1 0 0 / 0.08);
+    --cor-ativo: oklch(1 0 0 / 0.14);
     --cor-borda-navbar: oklch(1 0 0 / 0.12);
     --cor-temperatura: oklch(0.75 0.15 45);
     --cor-humidade: oklch(0.75 0.15 250);
@@ -30,87 +34,143 @@ body.dark {
 }
 
 body {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
     margin: 0;
     font-family: system-ui, sans-serif;
+    line-height: 1.5;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
 }
 
-.button_left {
-    position: absolute;
-    left: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-#nav {
+/* ---------- barra lateral: so uma seccao fica visivel de cada vez (script.js marca a ativa) ---------- */
+#sidebar {
     position: sticky;
-    display: flex;
-    justify-content: center;
-    color: inherit;
-    padding: 16px;
-    border-bottom: 1px solid var(--cor-borda-navbar);
-    backdrop-filter: blur(20px);
     top: 0;
     z-index: 999;
-    background-color: var(--cor-fundo-navbar);
-}
-
-#nav nav {
     display: flex;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    gap: 32px;
+    box-sizing: border-box;
+    height: 100vh;
+    padding: 24px 16px 16px;
+    border-right: 1px solid var(--cor-borda-navbar);
+    background-color: var(--cor-superficie);
 }
 
-#nav a,
-#nav button {
+.marca {
+    padding: 0 16px;
+}
+
+.marca .titulo {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.marca .estado {
+    margin: 0;
+    color: var(--cor-texto-suave);
+}
+
+#sidebar nav {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#sidebar a,
+#sidebar button {
     padding: 12px 16px;
     border: 1px solid transparent;
     border-radius: 8px;
     background: transparent;
     font: inherit;
     text-decoration: none;
-    color: inherit;
+    color: var(--cor-texto-suave);
     cursor: pointer;
-    transition: background-color 0.15s;
+    transition: background-color 0.15s, color 0.15s;
 }
 
-#nav button {
-    border-color: var(--cor-borda-navbar);
-}
-
-#nav a:hover,
-#nav button:hover {
+#sidebar a:hover,
+#sidebar button:hover {
     background-color: var(--cor-hover-navbar);
+    color: var(--cor-texto);
 }
 
-#nav a:focus-visible,
-#nav button:focus-visible {
+#sidebar a[aria-current="page"] {
+    background-color: var(--cor-ativo);
+    color: var(--cor-texto);
+    font-weight: 600;
+}
+
+#sidebar a:focus-visible,
+#sidebar button:focus-visible {
     outline: 2px solid currentColor;
     outline-offset: 2px;
 }
 
+/* botao do tema: so o icone do modo para onde vai mudar */
+#darkmode {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-color: var(--cor-borda-navbar);
+}
+
+#darkmode svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#darkmode .sol,
+body.dark #darkmode .lua {
+    display: none;
+}
+
+body.dark #darkmode .sol {
+    display: block;
+}
+
+/* ---------- conteudo ---------- */
 main {
-    max-width: 1000px;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 1040px;
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 32px;
 }
 
 section {
-    padding: 32px 0;
-    /* a nav e sticky: sem isto o titulo da seccao fica por baixo dela ao saltar por um link */
-    scroll-margin-top: 72px;
+    padding: 40px 0;
+}
+
+main section:not(.ativa) {
+    display: none;
 }
 
 h2 {
-    margin: 0 0 8px;
-    font-size: 1.5rem;
+    margin: 0 0 16px;
+    font-size: 1.563rem;
+    font-weight: 600;
     line-height: 1.2;
 }
 
 .nota {
     margin: 0 0 16px;
     font-size: 0.875rem;
+    color: var(--cor-texto-suave);
 }
 
 /* estado da ligacao: a bolinha cheia e ok, o anel vazio e erro (o texto diz o mesmo) */
@@ -124,6 +184,7 @@ h2 {
 
 .estado::before {
     content: "";
+    flex: none;
     width: 10px;
     height: 10px;
     box-sizing: border-box;
@@ -140,30 +201,48 @@ h2 {
     border-color: var(--cor-erro);
 }
 
-/* o numero grande e a peca central da pagina */
+/* cada medida e um instrumento: o numero grande, a diferenca para a media e o grafico */
 .leituras {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 32px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.leituras + .nota {
+    margin-top: 24px;
 }
 
 .leitura {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding-top: 16px;
-    border-top: 1px solid var(--cor-borda-navbar);
+    padding: 24px;
+    border: 1px solid var(--cor-borda-navbar);
+    border-radius: 16px;
+    background-color: var(--cor-superficie);
 }
 
 .nome {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 0.875rem;
+    color: var(--cor-texto-suave);
+}
+
+.nome::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cor-serie);
 }
 
 .valor {
-    font-size: clamp(3.5rem, 14vw, 6.5rem);
-    font-weight: 300;
+    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-weight: 200;
+    letter-spacing: -0.03em;
     line-height: 1;
-    font-variant-numeric: tabular-nums;
     color: var(--cor-serie);
 }
 
@@ -171,7 +250,8 @@ h2 {
     margin-left: 8px;
     font-size: 0.3em;
     font-weight: 400;
-    color: var(--cor-texto);
+    letter-spacing: 0;
+    color: var(--cor-texto-suave);
 }
 
 .delta {
@@ -179,40 +259,42 @@ h2 {
     font-size: 0.875rem;
 }
 
+.leitura .grafico {
+    margin-top: 16px;
+}
+
+/* ---------- botoes de periodo ---------- */
 .periodos {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
 }
 
-.periodos input {
+.periodos input,
+.periodos button {
     padding: 8px 16px;
     border: 1px solid var(--cor-borda-navbar);
     border-radius: 8px;
-    background: transparent;
+    background: var(--cor-superficie);
     font: inherit;
     color: inherit;
 }
 
 .periodos button {
-    padding: 8px 16px;
-    border: 1px solid var(--cor-borda-navbar);
-    border-radius: 8px;
-    background: transparent;
-    font: inherit;
-    color: inherit;
     cursor: pointer;
-    transition: background-color 0.15s;
+    transition: background-color 0.15s, color 0.15s;
 }
 
-.periodos button:hover,
-.periodos button[aria-pressed="true"] {
+.periodos button:hover {
     background-color: var(--cor-hover-navbar);
 }
 
+/* estado ativo cheio: nao depende so da cor para se perceber */
 .periodos button[aria-pressed="true"] {
     border-color: var(--cor-texto);
+    background-color: var(--cor-texto);
+    color: var(--cor-fundo);
 }
 
 .periodos button:focus-visible,
@@ -221,69 +303,81 @@ h2 {
     outline-offset: 2px;
 }
 
+/* ---------- numeros de cada medida (minimo, media, maximo) ---------- */
+.numeros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 32px;
+}
+
+.numero {
+    display: flex;
+    flex-direction: column;
+}
+
+.rotulo-num {
+    font-size: 0.875rem;
+    color: var(--cor-texto-suave);
+}
+
+.num {
+    font-size: 1.563rem;
+    font-weight: 300;
+}
+
+/* a media e o numero principal da medida */
+.numero:nth-child(2) .num {
+    font-weight: 400;
+    color: var(--cor-serie);
+}
+
+.num .un {
+    margin-left: 4px;
+    font-size: 0.875rem;
+    color: var(--cor-texto-suave);
+}
+
+/* ---------- Sistema: tabela dentro de um painel ---------- */
+.painel {
+    padding: 8px 24px;
+    border: 1px solid var(--cor-borda-navbar);
+    border-radius: 16px;
+    background-color: var(--cor-superficie);
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-    font-variant-numeric: tabular-nums;
-}
-
-caption {
-    text-align: left;
 }
 
 th,
 td {
-    padding: 12px 8px;
+    padding: 16px 0;
     border-bottom: 1px solid var(--cor-borda-navbar);
-    text-align: right;
 }
 
-th:first-child {
+tr:last-child th,
+tr:last-child td {
+    border-bottom: none;
+}
+
+th {
+    font-weight: 400;
     text-align: left;
+    color: var(--cor-texto-suave);
 }
 
-th[scope="row"]::before {
-    content: "";
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    margin-right: 8px;
-    border-radius: 50%;
-    background: var(--cor-serie);
+td {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
 }
 
 footer {
-    padding: 16px 0;
+    padding: 16px 0 32px;
     border-top: 1px solid var(--cor-borda-navbar);
 }
 
-@media (max-width: 640px) {
-    .button_left {
-        position: static;
-        transform: none;
-    }
-
-    #nav nav {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
-
-.graficos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-}
-
-figure {
-    margin: 0;
-}
-
-figcaption {
-    margin-bottom: 8px;
-    font-size: 0.875rem;
-}
-
+/* ---------- graficos ---------- */
 .grafico {
     width: 100%;
     border: 1px solid var(--cor-borda-navbar);
@@ -296,7 +390,7 @@ figcaption {
 }
 
 .rotulo {
-    fill: var(--cor-texto);
+    fill: var(--cor-texto-suave);
     font-size: 11px;
 }
 
@@ -311,11 +405,56 @@ figcaption {
     fill: var(--cor-serie);
 }
 
-/* cada serie tem a sua cor, igual no grafico atual e no da media */
+/* cada serie tem a sua cor, igual em todos os graficos */
 .temperatura {
     --cor-serie: var(--cor-temperatura);
 }
 
 .humidade {
     --cor-serie: var(--cor-humidade);
+}
+
+/* ---------- ecra estreito: a barra passa para o topo ---------- */
+@media (max-width: 640px) {
+    body {
+        grid-template-columns: 1fr;
+        /* a altura que sobra e do conteudo, nao da barra */
+        grid-template-rows: auto 1fr;
+    }
+
+    #sidebar {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px 16px;
+        height: auto;
+        padding: 12px 16px;
+        border-right: none;
+        border-bottom: 1px solid var(--cor-borda-navbar);
+    }
+
+    .marca {
+        padding: 0;
+    }
+
+    #sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        flex-basis: 100%;
+        order: 3;
+    }
+
+    main {
+        padding: 0 16px;
+    }
+
+    .leitura {
+        padding: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
 }

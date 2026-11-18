@@ -7,21 +7,38 @@
         <link rel="stylesheet" href="/static/style.css">
     </head>
     <body>
-        <div id="nav">
-            <nav>
-                <a href="#agora">agora</a>
-                <a href="#ao_vivo">ao vivo</a>
-                <a href="#estatisticas">estatisticas</a>
-                <a href="#media">media</a>
-                <a href="#dia">dia</a>
-                <a href="#sistema">sistema</a>
-                <button id="darkmode" class="button_left">dark</button>
+        <aside id="sidebar">
+            <div class="marca">
+                <p class="titulo">Sensor</p>
+                <p id="estado_lateral" class="estado">A ligar...</p>
+            </div>
+            <nav aria-label="Seccoes">
+                <a href="#ao_vivo">Ao vivo</a>
+                <a href="#estatisticas">Estatisticas</a>
+                <a href="#dia">Dia</a>
+                <a href="#sistema">Sistema</a>
             </nav>
-        </div>
+            <button type="button" id="darkmode" aria-label="Alternar modo escuro" title="Modo escuro">
+                <svg class="lua" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                </svg>
+                <svg class="sol" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5"/>
+                    <line x1="12" y1="1" x2="12" y2="3"/>
+                    <line x1="12" y1="21" x2="12" y2="23"/>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                    <line x1="1" y1="12" x2="3" y2="12"/>
+                    <line x1="21" y1="12" x2="23" y2="12"/>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                </svg>
+            </button>
+        </aside>
 
         <main>
-            <section id="agora">
-                <h2>Agora</h2>
+            <section id="ao_vivo">
+                <h2>Ao vivo</h2>
                 <p id="estado" class="estado">A espera da primeira leitura...</p>
                 <div class="leituras">
                     <div class="leitura temperatura">
@@ -29,90 +46,72 @@
                         <span class="valor"><span id="v_temperatura">--</span><span class="un">°C</span></span>
                         <span id="d_temperatura" class="delta"></span>
                         <span id="i_temperatura" class="delta"></span>
+                        <svg id="grafico_temperatura" class="grafico temperatura" viewBox="0 0 600 200"
+                             role="img" aria-label="Temperatura, ultimas 60 leituras"></svg>
                     </div>
                     <div class="leitura humidade">
                         <span class="nome">Humidade</span>
                         <span class="valor"><span id="v_humidade">--</span><span class="un">%</span></span>
                         <span id="d_humidade" class="delta"></span>
                         <span id="i_humidade" class="delta"></span>
-                    </div>
-                </div>
-            </section>
-
-            <section id="ao_vivo">
-                <h2>Ao vivo</h2>
-                <p class="nota">As ultimas 60 leituras, uma a cada 5 s.</p>
-                <div class="graficos">
-                    <figure>
-                        <figcaption>Temperatura (°C)</figcaption>
-                        <svg id="grafico_temperatura" class="grafico temperatura" viewBox="0 0 600 200"
-                             role="img" aria-label="Temperatura, ultimas 60 leituras"></svg>
-                    </figure>
-                    <figure>
-                        <figcaption>Humidade (%)</figcaption>
                         <svg id="grafico_humidade" class="grafico humidade" viewBox="0 0 600 200"
                              role="img" aria-label="Humidade, ultimas 60 leituras"></svg>
-                    </figure>
+                    </div>
                 </div>
+                <p class="nota">Graficos: as ultimas 60 leituras, uma a cada 5 s.</p>
             </section>
 
             <section id="estatisticas">
                 <h2>Estatisticas</h2>
                 <div class="periodos" role="group" aria-label="Periodo">
-                    <button type="button" data-minutos="15" aria-pressed="true">15 min</button>
-                    <button type="button" data-minutos="60" aria-pressed="false">1 h</button>
-                    <button type="button" data-minutos="360" aria-pressed="false">6 h</button>
-                    <button type="button" data-minutos="1440" aria-pressed="false">24 h</button>
-                    <button type="button" data-minutos="10080" aria-pressed="false">7 dias</button>
+                    <button type="button" data-minutos="15" data-n="15" data-passo="1" data-nota="Media por minuto, ultimos 15 min." aria-pressed="true">15 min</button>
+                    <button type="button" data-minutos="60" data-n="60" data-passo="1" data-nota="Media por minuto, ultima hora." aria-pressed="false">1 h</button>
+                    <button type="button" data-minutos="360" data-n="72" data-passo="5" data-nota="Media de 5 em 5 min, ultimas 6 h." aria-pressed="false">6 h</button>
+                    <button type="button" data-minutos="1440" data-n="96" data-passo="15" data-nota="Media de 15 em 15 min, ultimas 24 h." aria-pressed="false">24 h</button>
+                    <button type="button" data-minutos="10080" data-n="168" data-passo="60" data-nota="Media de hora a hora, ultimos 7 dias." aria-pressed="false">7 dias</button>
                 </div>
-                <table>
-                    <caption id="stats_n" class="nota">A espera das estatisticas...</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Minimo</th>
-                            <th scope="col">Media</th>
-                            <th scope="col">Maximo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="temperatura">
-                            <th scope="row">Temperatura (°C)</th>
-                            <td id="periodo_temperatura_min">--</td>
-                            <td id="periodo_temperatura_media">--</td>
-                            <td id="periodo_temperatura_max">--</td>
-                        </tr>
-                        <tr class="humidade">
-                            <th scope="row">Humidade (%)</th>
-                            <td id="periodo_humidade_min">--</td>
-                            <td id="periodo_humidade_media">--</td>
-                            <td id="periodo_humidade_max">--</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="media">
-                <h2>Media</h2>
-                <div class="periodos" role="group" aria-label="Periodo da media">
-                    <button type="button" data-n="15" data-passo="1" data-nota="Media por minuto, ultimos 15 min." aria-pressed="true">15 min</button>
-                    <button type="button" data-n="60" data-passo="1" data-nota="Media por minuto, ultima hora." aria-pressed="false">1 h</button>
-                    <button type="button" data-n="72" data-passo="5" data-nota="Media de 5 em 5 min, ultimas 6 h." aria-pressed="false">6 h</button>
-                    <button type="button" data-n="96" data-passo="15" data-nota="Media de 15 em 15 min, ultimas 24 h." aria-pressed="false">24 h</button>
+                <p id="stats_n" class="nota">A espera das estatisticas...</p>
+                <div class="leituras">
+                    <div class="leitura temperatura">
+                        <span class="nome">Temperatura</span>
+                        <div class="numeros">
+                            <div class="numero">
+                                <span class="rotulo-num">Minimo</span>
+                                <span class="num"><span id="periodo_temperatura_min">--</span><span class="un">°C</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Media</span>
+                                <span class="num"><span id="periodo_temperatura_media">--</span><span class="un">°C</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Maximo</span>
+                                <span class="num"><span id="periodo_temperatura_max">--</span><span class="un">°C</span></span>
+                            </div>
+                        </div>
+                        <svg id="grafico_media_temperatura" class="grafico temperatura" viewBox="0 0 600 200"
+                             role="img" aria-label="Media de temperatura"></svg>
+                    </div>
+                    <div class="leitura humidade">
+                        <span class="nome">Humidade</span>
+                        <div class="numeros">
+                            <div class="numero">
+                                <span class="rotulo-num">Minimo</span>
+                                <span class="num"><span id="periodo_humidade_min">--</span><span class="un">%</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Media</span>
+                                <span class="num"><span id="periodo_humidade_media">--</span><span class="un">%</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Maximo</span>
+                                <span class="num"><span id="periodo_humidade_max">--</span><span class="un">%</span></span>
+                            </div>
+                        </div>
+                        <svg id="grafico_media_humidade" class="grafico humidade" viewBox="0 0 600 200"
+                             role="img" aria-label="Media de humidade"></svg>
+                    </div>
                 </div>
                 <p id="media_nota" class="nota">Media por minuto, ultimos 15 min.</p>
-                <div class="graficos">
-                    <figure>
-                        <figcaption>Temperatura (°C)</figcaption>
-                        <svg id="grafico_media_temperatura" class="grafico temperatura" viewBox="0 0 600 200"
-                             role="img" aria-label="Media da temperatura"></svg>
-                    </figure>
-                    <figure>
-                        <figcaption>Humidade (%)</figcaption>
-                        <svg id="grafico_media_humidade" class="grafico humidade" viewBox="0 0 600 200"
-                             role="img" aria-label="Media da humidade"></svg>
-                    </figure>
-                </div>
             </section>
 
             <section id="dia">
@@ -122,51 +121,56 @@
                     <input type="date" id="dia_data" aria-label="Dia (ultimos 7 dias)">
                     <button type="button" id="dia_seguinte">Dia seguinte</button>
                 </div>
-                <table>
-                    <caption id="dia_n" class="nota">A espera do dia...</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col"></th>
-                            <th scope="col">Minimo</th>
-                            <th scope="col">Media</th>
-                            <th scope="col">Maximo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="temperatura">
-                            <th scope="row">Temperatura (°C)</th>
-                            <td id="dia_temperatura_min">--</td>
-                            <td id="dia_temperatura_media">--</td>
-                            <td id="dia_temperatura_max">--</td>
-                        </tr>
-                        <tr class="humidade">
-                            <th scope="row">Humidade (%)</th>
-                            <td id="dia_humidade_min">--</td>
-                            <td id="dia_humidade_media">--</td>
-                            <td id="dia_humidade_max">--</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <p class="nota">Media de 15 em 15 min.</p>
-                <div class="graficos">
-                    <figure>
-                        <figcaption>Temperatura (°C)</figcaption>
+                <p id="dia_n" class="nota">A espera do dia...</p>
+                <div class="leituras">
+                    <div class="leitura temperatura">
+                        <span class="nome">Temperatura</span>
+                        <div class="numeros">
+                            <div class="numero">
+                                <span class="rotulo-num">Minimo</span>
+                                <span class="num"><span id="dia_temperatura_min">--</span><span class="un">°C</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Media</span>
+                                <span class="num"><span id="dia_temperatura_media">--</span><span class="un">°C</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Maximo</span>
+                                <span class="num"><span id="dia_temperatura_max">--</span><span class="un">°C</span></span>
+                            </div>
+                        </div>
                         <svg id="grafico_dia_temperatura" class="grafico temperatura" viewBox="0 0 600 200"
-                             role="img" aria-label="Temperatura ao longo do dia escolhido"></svg>
-                    </figure>
-                    <figure>
-                        <figcaption>Humidade (%)</figcaption>
+                             role="img" aria-label="Media de temperatura"></svg>
+                    </div>
+                    <div class="leitura humidade">
+                        <span class="nome">Humidade</span>
+                        <div class="numeros">
+                            <div class="numero">
+                                <span class="rotulo-num">Minimo</span>
+                                <span class="num"><span id="dia_humidade_min">--</span><span class="un">%</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Media</span>
+                                <span class="num"><span id="dia_humidade_media">--</span><span class="un">%</span></span>
+                            </div>
+                            <div class="numero">
+                                <span class="rotulo-num">Maximo</span>
+                                <span class="num"><span id="dia_humidade_max">--</span><span class="un">%</span></span>
+                            </div>
+                        </div>
                         <svg id="grafico_dia_humidade" class="grafico humidade" viewBox="0 0 600 200"
-                             role="img" aria-label="Humidade ao longo do dia escolhido"></svg>
-                    </figure>
+                             role="img" aria-label="Media de humidade"></svg>
+                    </div>
                 </div>
+                <p class="nota">Graficos: media de 15 em 15 min.</p>
             </section>
 
             <section id="sistema">
                 <h2>Sistema</h2>
-                <table>
-                    <caption id="sistema_nota" class="nota">A espera do estado do servidor...</caption>
-                    <tbody>
+                <p id="sistema_nota" class="nota">A espera do estado do servidor...</p>
+                <div class="painel">
+                    <table>
+                        <tbody>
                         <tr>
                             <th scope="row">Leituras guardadas</th>
                             <td id="s_leituras">--</td>
@@ -192,7 +196,8 @@
                             <td id="s_arduino">--</td>
                         </tr>
                     </tbody>
-                </table>
+                    </table>
+                </div>
             </section>
 
             <footer>

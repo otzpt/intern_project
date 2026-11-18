@@ -1,6 +1,7 @@
 
 // --- Agora: valores atuais ---
 const estado = document.getElementById("estado");
+const estadoLateral = document.getElementById("estado_lateral");
 
 const CAMPOS = {
   temperatura: { valor: document.getElementById("v_temperatura"), delta: document.getElementById("d_temperatura"), unidade: "°C" },
@@ -12,6 +13,9 @@ for (const [nome, c] of Object.entries(CAMPOS)) c.intervalo = document.getElemen
 function mostrarEstado(texto, ok) {
   estado.textContent = texto;
   estado.className = ok ? "estado ok" : "estado erro";
+  // a barra lateral mostra o mesmo estado, em curto, seja qual for a seccao aberta
+  estadoLateral.textContent = ok ? "A receber leituras" : "Sem leituras";
+  estadoLateral.className = estado.className;
 
   if (ok) return;
   for (const c of Object.values(CAMPOS)) {
@@ -72,14 +76,40 @@ async function atualizarUltimaHora() {
 atualizarUltimaHora();
 setInterval(atualizarUltimaHora, 5000);
 
+// --- Barra lateral ---
+// So a seccao escolhida fica visivel. O endereco (#estatisticas, ...) guarda qual, por isso um refresh mantem-na.
+const seccoes = [...document.querySelectorAll("main section")];
+const ligacoes = document.querySelectorAll("#sidebar nav a");
+
+function mostrarSeccao() {
+  // sem # ou com um # desconhecido abre na primeira (Ao vivo)
+  const alvo = seccoes.find((s) => s.id === location.hash.slice(1)) ?? seccoes[0];
+
+  seccoes.forEach((s) => s.classList.toggle("ativa", s === alvo));
+  ligacoes.forEach((a) => {
+    if (a.getAttribute("href") === "#" + alvo.id) a.setAttribute("aria-current", "page");
+    else a.removeAttribute("aria-current");
+  });
+}
+
+function aoTopo() {
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", () => {
+  mostrarSeccao();
+  aoTopo();
+});
+mostrarSeccao();
+// um refresh em #dia faz o browser saltar para a seccao, e no ecra estreito isso esconde o titulo atras da barra
+window.addEventListener("load", aoTopo);
+
 // --- Tema claro/escuro ---
 const button_state_mode = document.getElementById("darkmode");
 
-// liga ou desliga o modo escuro e ajusta o texto
+// liga ou desliga o modo escuro (o CSS escolhe o icone do botao)
 function aplicarTema(escuro) {
   document.body.classList.toggle("dark", escuro);
-  // texto indica a que modo ira mudar
-  button_state_mode.textContent = escuro ? "light" : "dark";
 }
 
 // getItem devolve null se nunca guardaste nada, e "true" e um texto, nao um booleano
@@ -237,14 +267,15 @@ const GRAFICOS_DIA = [
   ["grafico_dia_humidade", "humidade", " %", 5],
 ];
 
-// media: o botao escolhe quantos blocos (n) e de quantos minutos cada (passo)
-const botaoMedia = grupo("#media .periodos", () => {
-  document.getElementById("media_nota").textContent = botaoMedia().dataset.nota;
+// um so seletor de periodo: a tabela usa `minutos` e os graficos de media usam n (blocos) e passo (minutos de cada bloco)
+const botaoPeriodo = grupo("#estatisticas .periodos", () => {
+  document.getElementById("media_nota").textContent = botaoPeriodo().dataset.nota;
+  carregarPeriodo();
   carregarMedias();
 });
 
 function carregarMedias() {
-  const { n, passo } = botaoMedia().dataset;
+  const { n, passo } = botaoPeriodo().dataset;
   carregar(`/medias?n=${n}&passo=${passo}`, "minuto", GRAFICOS_MEDIA);
 }
 
@@ -272,8 +303,6 @@ async function preencherEstatisticas(url, prefixo, nota, texto) {
     // mesma politica dos graficos: o ultimo valor fica, atualizar() ja avisa que o servidor nao responde
   }
 }
-
-const botaoPeriodo = grupo("#estatisticas .periodos", () => carregarPeriodo());
 
 function carregarPeriodo() {
   const b = botaoPeriodo();
