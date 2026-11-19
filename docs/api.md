@@ -77,7 +77,7 @@ O que o servidor guarda e o estado do Arduino. Responde sempre `200`, mesmo sem 
 
 ### `GET /live`
 
-Página HTML (`server/static/live.html`). Pede `/` e `/media` todos os segundos, `/historico?n=60` e `/estatisticas` de 5 em 5 s e `/medias` de 60 em 60 s. Mostra os valores atuais com a diferença para a média de 15 min e o mínimo e máximo da última hora, as últimas 60 leituras, médias de 15 min, 1 h, 6 h ou 24 h, uma tabela de mínimo, média e máximo de 15 min a 7 dias, e um seletor de dia (últimos 7 dias, em hora local) com as estatísticas desse dia e médias de 15 min. Os ficheiros estáticos são servidos em `/static`.
+Página HTML (`server/static/live.html`) com barra lateral e quatro secções, escolhidas pelo `#` do endereço (`#ao_vivo`, `#estatisticas`, `#dia`, `#sistema`). *Ao vivo*: pede `/` e `/media` todos os segundos e `/historico?n=60` de 5 em 5 s; mostra os valores atuais com a diferença para a média de 15 min, o mínimo e máximo da última hora e as últimas 60 leituras. *Estatísticas*: um seletor de período (15 min, 1 h, 6 h, 24 h, 7 dias) que pede `/estatisticas` de 5 em 5 s e `/medias` de 60 em 60 s. *Dia*: seletor de dia (últimos 7 dias, em hora local) com as estatísticas desse dia e médias de 15 min. *Sistema*: tabela com o que `/estado` devolve, de 5 em 5 s. Os ficheiros estáticos são servidos em `/static`.
 
 ## Base de dados
 
