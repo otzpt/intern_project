@@ -5,12 +5,12 @@ import sys
 import time
 
 
-def modo():
+def ler_modo():
     modo = sys.argv[1] if len(sys.argv) > 1 else "normal"
     print(modo)
     return modo
 
-def preso(temp, hum):
+def preso(temp, hum, n):
     return temp, hum
 
 def deriva(temp, hum, n):
@@ -41,7 +41,7 @@ def pico(temp, hum, n):# idk if i should ask for a base value for now im keeping
 
     return temp, hum
 
-def ruido(temp, hum):
+def ruido(temp, hum, n):
     dif_temp = random.gauss(0, 0.9)
     dif_hum = random.gauss(0, 1.1)
 
@@ -50,7 +50,7 @@ def ruido(temp, hum):
 
     return temp, hum
 
-def normal(temp, hum):
+def normal(temp, hum, n):
     # valores aleatorios para ser um teste simulado mais autentico
     dif_temp = random.gauss(0, 0.2)
     dif_hum = random.gauss(0, 0.5)
@@ -60,78 +60,36 @@ def normal(temp, hum):
 
     return temp, hum
 
+MODOS = {
+    "normal": normal,
+    "ruido": ruido,
+    "pico": pico,
+    "preso": preso,
+    "deriva": deriva,
+}
+
 if __name__ == "__main__":
-    ler_modo = modo()
+    modo = ler_modo()
+
+    if modo not in MODOS:
+        sys.exit(f"modo desconhecido: {modo}. modos validos: {', '.join(MODOS)}")
 
     master, slave = pty.openpty() # master e o codigo que vez, slave e a porta serie simulada
     caminho = os.ttyname(slave) # traduz slave para um caminho
 
     print(caminho)
 
-    if ler_modo == "normal":
-        while True:
-            temp, humidade = normal(22.0, 60.0)
+    n = 0
+    while True:
+        temp, humidade = MODOS[modo](22.0, 60.0, n)
 
-            # erro retorna true caso o numero aleatorio de 0 a 1 for menor que 0.1
-            erro = random.random() < 0.1
+        # erro retorna true caso o numero aleatorio de 0 a 1 for menor que 0.1
+        erro = random.random() < 0.1
 
-            if erro:
-                os.write(master, "Erro a ler o DHT\r\n".encode())
-            else:
-                os.write(master, f"{temp:.1f},{humidade:.1f}\r\n".encode()) # simular valores
+        if erro:
+            os.write(master, "Erro a ler o DHT\r\n".encode())
+        else:
+            os.write(master, f"{temp:.1f},{humidade:.1f}\r\n".encode()) # simular valores
 
-            time.sleep(5)
-    elif ler_modo == "ruido":
-        while True:
-            temp, humidade = ruido(22.0, 60.0)
-
-            # erro retorna true caso o numero aleatorio de 0 a 1 for menor que 0.1
-            erro = random.random() < 0.1
-
-            if erro:
-                os.write(master, "Erro a ler o DHT\r\n".encode())
-            else:
-                os.write(master, f"{temp:.1f},{humidade:.1f}\r\n".encode()) # simular valores
-            time.sleep(5)
-    elif ler_modo == "pico":
-        n = 0
-        while True:
-            temp, humidade = pico(22.0, 60.0, n)
-
-            # erro retorna true caso o numero aleatorio de 0 a 1 for menor que 0.1
-            erro = random.random() < 0.1
-
-            if erro:
-                os.write(master, "Erro a ler o DHT\r\n".encode())
-            else:
-                os.write(master, f"{temp:.1f},{humidade:.1f}\r\n".encode()) # simular valores
-            n+=1
-            time.sleep(5)
-    elif ler_modo == "preso":
-        while True:
-            temp, humidade = preso(22.0, 60.0)
-
-            # erro retorna true caso o numero aleatorio de 0 a 1 for menor que 0.1
-            erro = random.random() < 0.1
-
-            if erro:
-                os.write(master, "Erro a ler o DHT\r\n".encode())
-            else:
-                os.write(master, f"{temp:.1f},{humidade:.1f}\r\n".encode()) # simular valores
-            time.sleep(5)
-    elif ler_modo == "deriva":
-        n = 0
-        while True:
-            temp, humidade = deriva(22.0, 60.0, n)
-
-            # erro retorna true caso o numero aleatorio de 0 a 1 for menor que 0.1
-            erro = random.random() < 0.1
-
-            if erro:
-                os.write(master, "Erro a ler o DHT\r\n".encode())
-            else:
-                os.write(master, f"{temp:.1f},{humidade:.1f}\r\n".encode()) # simular valores
-            n += 1
-            time.sleep(5)
-    else:
-        print("invalid option!")
+        n += 1
+        time.sleep(5)
